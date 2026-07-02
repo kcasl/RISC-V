@@ -18,8 +18,8 @@ module riscv_core_sim_tb ();
 	wire [31:0] irdata_o;
 	wire [31:0] drdata_o;
 
-	// Input instruction
-	reg  [31:0] if_opcode_w;
+	// Input instruction (from memory instruction read data)
+	wire [31:0] if_opcode_w;
 	// Outputs
 	wire [31:0] id_imm_w;
 	wire [4:0] id_rd_index_w;
@@ -57,13 +57,46 @@ module riscv_core_sim_tb ();
 	riscv_memory 
 	u_memory (
 		.clk_i(clk_i),
-		.reset_i(reset_i)
+		.reset_i(reset_i),
+		.iaddr_i(iaddr_i),
+		.ird_i(ird_i),
+		.daddr_i(daddr_i),
+		.dwdata_i(dwdata_i),
+		.dsize_i(dsize_i),
+		.drd_i(drd_i),
+		.dwr_i(dwr_i),
+		.irdata_o(irdata_o),
+		.drdata_o(drdata_o)
 	);
+
+	assign if_opcode_w = irdata_o;
 
 	// Decoder
 	riscv_decoder
 	u_decoder
 	(
+		.if_opcode_w(if_opcode_w),
+		.id_imm_w(id_imm_w),
+		.id_rd_index_w(id_rd_index_w),
+		.id_ra_index_w(id_ra_index_w),
+		.id_rb_index_w(id_rb_index_w),
+		.id_alu_op_w(id_alu_op_w),
+		.id_branch_w(id_branch_w),
+		.id_mem_size_w(id_mem_size_w),
+		.mulh_w(mulh_w),
+		.mulhsu_w(mulhsu_w),
+		.div_w(div_w),
+		.rem_w(rem_w),
+		.sra_w(sra_w),
+		.srai_w(srai_w),
+		.alu_imm_w(alu_imm_w),
+		.jal_w(jal_w),
+		.load_w(load_w),
+		.store_w(store_w),
+		.lbu_w(lbu_w),
+		.lhu_w(lhu_w),
+		.jalr_w(jalr_w),
+		.id_illegal_w(id_illegal_w)
 	);
 	//}}}
 
@@ -85,7 +118,7 @@ module riscv_core_sim_tb ();
 		iaddr_i = 0;
 		ird_i = 0;
 		dsize_i=SIZE_WORD;
-		#(4*p) reset_i = 1'b1;	
+		#(4*p) reset_i = 1'b1;
 
 		#(4*p) 	iaddr_i = 32'h0;	
 				ird_i = 1'b1;
@@ -99,7 +132,7 @@ module riscv_core_sim_tb ();
 				ird_i = 1'b1;
 		#(p)	ird_i = 1'b0;	
 				$display("T=%03t ns: %h : %h\n",$realtime/1000, iaddr_i, irdata_o);
-		#(4*p) 	iaddr_i = 32'hd;
+		#(4*p) 	iaddr_i = 32'hc;
 				ird_i = 1'b1;
 		#(p)	ird_i = 1'b0;	
 				$display("T=%03t ns: %h : %h\n",$realtime/1000, iaddr_i, irdata_o);

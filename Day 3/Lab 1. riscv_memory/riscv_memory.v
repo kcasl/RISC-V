@@ -60,6 +60,11 @@ assign drdata_o =
     (SIZE_BYTE == dsize_r) ? { 24'b0, rdata_byte_w } :
     (SIZE_HALF == dsize_r) ? { 16'b0, rdata_half_w } : drdata_r;
 
+initial begin
+    $readmemh(FIRMWARE, mem_r);
+    $display("mem0=%h", mem_r[0]);
+    $display("mem1=%h", mem_r[1]);
+end
 
 always @(posedge clk_i) begin
   if (reset_i) begin

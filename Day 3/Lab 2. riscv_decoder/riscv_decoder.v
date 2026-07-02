@@ -105,7 +105,7 @@ wire mulhu_w;
 wire divu_w ;
 wire remu_w ;
 
-
+wire jump_w;
 wire alu_reg_w;
 wire branch_w;
 
@@ -152,7 +152,7 @@ assign lbu_w    = op_load_w    && (3'b100 == f3_w);
 assign lhu_w    = op_load_w    && (3'b101 == f3_w);
 
 //**** store flags assign from f3 field and store flag
-assign sb_w     = op_store_w   && (3'b000 == f3_w)
+assign sb_w     = op_store_w   && (3'b000 == f3_w);
 assign sh_w     = op_store_w   && (3'b001 == f3_w);
 assign sw_w     = op_store_w   && (3'b010 == f3_w);
 

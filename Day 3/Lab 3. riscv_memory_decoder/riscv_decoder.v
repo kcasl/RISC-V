@@ -105,7 +105,7 @@ wire mulhu_w;
 wire divu_w ;
 wire remu_w ;
 
-
+wire jump_w;
 wire alu_reg_w;
 wire branch_w;
 
@@ -114,7 +114,7 @@ wire branch_w;
 assign op_w = if_opcode_w[6:0];
 assign rd_w = if_opcode_w[11:7];
 assign f3_w = if_opcode_w[14:12];
-//assign ra_w = if_opcode_w[/*your code*/];
+assign ra_w = if_opcode_w[19:15];
 assign rb_w = if_opcode_w[24:20];
 assign f7_w = if_opcode_w[31:25];
 
@@ -123,22 +123,22 @@ assign op_branch_w  = (7'b1100011 == op_w);
 assign op_load_w    = (7'b0000011 == op_w);
 assign op_store_w   = (7'b0100011 == op_w);
 assign op_alu_imm_w = (7'b0010011 == op_w);
-//assign op_alu_reg_w = (/*your code*/ == op_w);
+assign op_alu_reg_w = (7'b0110011 == op_w);
 
 //**** flags assign from opcode register field [31:25]
 assign op_f7_main_w = (7'b0000000 == f7_w);
-//assign op_f7_alt_w  = (/*your code*/  == f7_w);
+assign op_f7_alt_w  = (7'b0100000 == f7_w);
 assign op_f7_mul_w  = (7'b0000001 == f7_w);
 
 //**** flags assign from opcode register field [6:0] and f3 combination
 assign lui_w    = (7'b0110111 == op_w);
-//assign auipc_w  = (/*your code*/  == op_w);
+assign auipc_w  = (7'b0010111 == op_w);
 assign jal_w    = (7'b1101111 == op_w);
 assign jalr_w   = (7'b1100111 == op_w) && (3'b000 == f3_w);
 
 //**** branch flags assign from f3 field and branch flag
 assign beq_w    = op_branch_w  && (3'b000 == f3_w);
-//assign bne_w    = op_branch_w  && (/*your code*/ == f3_w);
+assign bne_w    = op_branch_w && (3'b001 == f3_w);
 assign blt_w    = op_branch_w  && (3'b100 == f3_w);
 assign bge_w    = op_branch_w  && (3'b101 == f3_w);
 assign bltu_w   = op_branch_w  && (3'b110 == f3_w);
@@ -147,12 +147,12 @@ assign bgeu_w   = op_branch_w  && (3'b111 == f3_w);
 //**** load flags assign from f3 field and load flag
 assign lb_w     = op_load_w    && (3'b000 == f3_w);
 assign lh_w     = op_load_w    && (3'b001 == f3_w);
-//assign lw_w     = op_load_w    && (/*your code*/ == f3_w);
+assign lw_w     = op_load_w    && (3'b010 == f3_w);
 assign lbu_w    = op_load_w    && (3'b100 == f3_w);
 assign lhu_w    = op_load_w    && (3'b101 == f3_w);
 
 //**** store flags assign from f3 field and store flag
-//assign sb_w     = op_store_w   && (/*your code*/== f3_w);
+assign sb_w     = op_store_w   && (3'b000 == f3_w);
 assign sh_w     = op_store_w   && (3'b001 == f3_w);
 assign sw_w     = op_store_w   && (3'b010 == f3_w);
 
@@ -160,32 +160,32 @@ assign sw_w     = op_store_w   && (3'b010 == f3_w);
 assign addi_w   = op_alu_imm_w && (3'b000 == f3_w);
 assign slti_w   = op_alu_imm_w && (3'b010 == f3_w);
 assign sltiu_w  = op_alu_imm_w && (3'b011 == f3_w);
-//assign xori_w   = op_alu_imm_w && (/*your code*/ == f3_w);
+assign xori_w   = op_alu_imm_w && (3'b100 == f3_w);
 assign ori_w    = op_alu_imm_w && (3'b110 == f3_w);
 assign andi_w   = op_alu_imm_w && (3'b111 == f3_w);
-//assign slli_w   = op_alu_imm_w && (/*your code*/ == f3_w) && op_f7_main_w;
+assign slli_w   = op_alu_imm_w && (3'b001 == f3_w) && op_f7_main_w;
 assign srli_w   = op_alu_imm_w && (3'b101 == f3_w) && op_f7_main_w;
 assign srai_w   = op_alu_imm_w && (3'b101 == f3_w) && op_f7_alt_w;  
 
 assign add_w    = op_alu_reg_w && (3'b000 == f3_w) && op_f7_main_w;
 assign sub_w    = op_alu_reg_w && (3'b000 == f3_w) && op_f7_alt_w;
-//assign slt_w    = op_alu_reg_w && (/*your code*/ == f3_w) && op_f7_main_w;
+assign slt_w    = op_alu_reg_w && (3'b010 == f3_w) && op_f7_main_w;
 assign sltu_w   = op_alu_reg_w && (3'b011 == f3_w) && op_f7_main_w;
 assign xor_w    = op_alu_reg_w && (3'b100 == f3_w) && op_f7_main_w;
 assign or_w     = op_alu_reg_w && (3'b110 == f3_w) && op_f7_main_w;
 assign and_w    = op_alu_reg_w && (3'b111 == f3_w) && op_f7_main_w;
 assign sll_w    = op_alu_reg_w && (3'b001 == f3_w) && op_f7_main_w;
-//assign srl_w    = op_alu_reg_w && (/*your code*/ == f3_w) && op_f7_main_w;
+assign srl_w    = op_alu_reg_w && (3'b101 == f3_w) && op_f7_main_w;
 assign sra_w    = op_alu_reg_w && (3'b101 == f3_w) && op_f7_alt_w;	 
 
 assign mul_w    = op_alu_reg_w && (3'b000 == f3_w) && op_f7_mul_w;
 assign mulh_w   = op_alu_reg_w && (3'b001 == f3_w) && op_f7_mul_w;	
-//assign mulhsu_w = op_alu_reg_w && (/*your code*/ == f3_w) && op_f7_mul_w;   
+assign mulhsu_w = op_alu_reg_w && (3'b010 == f3_w) && op_f7_mul_w;
 assign mulhu_w  = op_alu_reg_w && (3'b011 == f3_w) && op_f7_mul_w;
 assign div_w    = op_alu_reg_w && (3'b100 == f3_w) && op_f7_mul_w;	
 assign divu_w   = op_alu_reg_w && (3'b101 == f3_w) && op_f7_mul_w;
 assign rem_w    = op_alu_reg_w && (3'b110 == f3_w) && op_f7_mul_w;	
-//assign remu_w   = op_alu_reg_w && (/*your code*/ == f3_w) && op_f7_mul_w;
+assign remu_w   = op_alu_reg_w && (3'b111 == f3_w) && op_f7_mul_w;
 
 
 //**** memory access flags 

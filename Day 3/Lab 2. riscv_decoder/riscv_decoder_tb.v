@@ -31,29 +31,29 @@ wire id_illegal_w;
 riscv_decoder
 u_decoder
 (
-./*input  [31:0]*/ if_opcode_w(if_opcode_w),
-./*output [31:0]*/ id_imm_w(id_imm_w),
-./*output [4:0] */id_rd_index_w(id_rd_index_w),
-./*output [4:0] */id_ra_index_w(id_ra_index_w),
-./*output [4:0] */id_rb_index_w(id_rb_index_w),
-./*output [3:0] */id_alu_op_w(id_alu_op_w),
-./*output [2:0] */id_branch_w(id_branch_w),
-./*output [1:0] */id_mem_size_w(id_mem_size_w),
+.if_opcode_w(if_opcode_w),
+.id_imm_w(id_imm_w),
+.id_rd_index_w(id_rd_index_w),
+.id_ra_index_w(id_ra_index_w),
+.id_rb_index_w(id_rb_index_w),
+.id_alu_op_w(id_alu_op_w),
+.id_branch_w(id_branch_w),
+.id_mem_size_w(id_mem_size_w),
 //Flags
-./*output */mulh_w(mulh_w),
-./*output */mulhsu_w(mulhsu_w),
-./*output */div_w(div_w),
-./*output */rem_w(rem_w),
-./*output */sra_w(sra_w),
-./*output */srai_w(srai_w),
-./*output */alu_imm_w(alu_imm_w),
-./*output */jal_w(jal_w),
-./*output */load_w(load_w),
-./*output */store_w(store_w),
-./*output */lbu_w(lbu_w),
-./*output */lhu_w(lhu_w),
-./*output */jalr_w(jalr_w),
-./*output */id_illegal_w(id_illegal_w)
+.mulh_w(mulh_w),
+.mulhsu_w(mulhsu_w),
+.div_w(div_w),
+.rem_w(rem_w),
+.sra_w(sra_w),
+.srai_w(srai_w),
+.alu_imm_w(alu_imm_w),
+.jal_w(jal_w),
+.load_w(load_w),
+.store_w(store_w),
+.lbu_w(lbu_w),
+.lhu_w(lhu_w),
+.jalr_w(jalr_w),
+.id_illegal_w(id_illegal_w)
 );
 
 parameter p=10;

@@ -47,11 +47,36 @@ wire [31:0]     sub_res_w = alu_a_i - alu_b_i;
 always @ (alu_op_i or alu_a_i or alu_b_i or sub_res_w)
 begin
 	flcnz = 5'b0;
-	// Insert your code here
-	//{{{
-	
-		
-	//}}}
+
+    // Zero Flag (Z)
+    if (result_r == 32'b0)
+        flcnz[0] = 1'b1;
+
+    // Negative Flag (N)
+    if (result_r[31])
+        flcnz[1] = 1'b1;
+
+    // Carry Flag (C) - ADD only
+    if (alu_op_i == `ALU_ADD)
+        flcnz[2] = ({1'b0, alu_a_i} + {1'b0, alu_b_i})[32];
+
+    // Less Flag (L) - Signed comparison
+    if (alu_op_i == `ALU_SLT)
+        flcnz[3] = result_r[0];
+
+    // Overflow Flag (F)
+    if (alu_op_i == `ALU_ADD)
+    begin
+        if ((alu_a_i[31] == alu_b_i[31]) &&
+            (result_r[31] != alu_a_i[31]))
+            flcnz[4] = 1'b1;
+    end
+    else if (alu_op_i == `ALU_SUB)
+    begin
+        if ((alu_a_i[31] != alu_b_i[31]) &&
+            (result_r[31] != alu_a_i[31]))
+            flcnz[4] = 1'b1;
+    end
 end
 //-----------------------------------------------------------------
 // ALU
@@ -175,7 +200,7 @@ begin
        `ALU_SLT : 	// Signed numbers
        begin
             if (alu_a_i[31] != alu_b_i[31])
-                result_r = ???;
+                result_r = alu_a_i[31] ? 32'h1 : 32'h0;
             else
                 result_r = sub_res_w[31] ? 32'h1 : 32'h0;
        end    
