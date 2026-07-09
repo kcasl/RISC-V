@@ -82,7 +82,6 @@ end
 // Instruction memory: READ ONLY
 //-----------------------------------------------------------------------------
 always @(posedge clk_i) begin
-	// Insert your code here
   if (~reset_i)
     irdata_r <= 32'h0;
   else if (ird_i)
@@ -96,7 +95,6 @@ end
 //-----------------------------------------------------------------------------
 // Read operation
 always @(posedge clk_i) begin
-	// Insert your code here
   if (~reset_i)
     drdata_r <= 32'h0;
   else if (drd_i)
@@ -105,7 +103,6 @@ end
 
 // Write operation operation
 always @(posedge clk_i) begin
-	// Insert your code here
   if (dbe_w[0] && dwr_i)
     mem_r[daddr_i[DEPTH:2]][7:0] <= dwdata_w[7:0];
 

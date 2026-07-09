@@ -67,10 +67,10 @@ module riscv_core_sim_tb1 ();
 	./*input 				*/reset_i(reset_i),	// Reset
 	//Your code
 	//{{{
-	./*input 				*/ird( ),				// Instruction Read request
-	./*input 				*/branch_taken_w( ),	// Jump instruction
-	./*input  [PC_SIZE-1:0] */jump_addr_w( ),		// Jump address
-	./*output [PC_SIZE-1:0] */if_next_addr_w( )		// Next instruction
+	./*input 				*/ird(ird_i),				// Instruction Read request
+	./*input 				*/branch_taken_w(branch_taken_w),	// Jump instruction
+	./*input  [PC_SIZE-1:0] */jump_addr_w(jump_addr_w),		// Jump address
+	./*output [PC_SIZE-1:0] */if_next_addr_w(if_next_addr_w)		// Next instruction
 	//}}}
 	);	
 	// Memory
@@ -80,8 +80,8 @@ module riscv_core_sim_tb1 ();
 	.reset_i(reset_i),
 	// Your code
 	//{{{		
-	.iaddr_i(),
-	.ird_i( ),		
+	.iaddr_i(iaddr_i),
+	.ird_i(ird_i),		
 	//}}}
 	.daddr_i(daddr_i),
 	.dwdata_i(dwdata_i),
