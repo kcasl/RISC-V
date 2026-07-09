@@ -116,14 +116,27 @@ always @ (*) begin
 		`BR_NE: begin	
 		// Insert your code
 		//{{{		
+			jump_addr_w = if_pc_d + id_imm_w;
+
+			if (ra_value_r != rb_value_r)
+				branch_taken_w = 1'b1;
+			else
+				branch_taken_w = 1'b0;
 		//}}}
 		end
 		`BR_LT: begin		
 		// Insert your code
 		//{{{		
 			// Dummy Branch
-			branch_taken_w = 1'b1;		
-			//jump_addr_w = 0;
+			// branch_taken_w = 1'b1;		
+			// jump_addr_w    = 32'h00000000;
+			if ($signed(ra_value_r) < $signed(rb_value_r)) begin
+				branch_taken_w = 1'b1;
+			end
+			else begin
+				branch_taken_w = 1'b0;
+			end
+			jump_addr_w = if_pc_d + id_imm_w;
 		//}}}		
 		end
 		`BR_GE: begin
