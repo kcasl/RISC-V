@@ -49,14 +49,19 @@ begin
 	flcnz = 5'b0;
 	// Insert your code here
 	//{{{
-	// Carry
-    flcnz[3] = (alu_a_i + alu_b_i) < alu_a_i;
+	// Zero
+    flcnz[0] = (result_r == 32'h0);
 
     // Negative
     flcnz[1] = result_r[31];
 
-    // Zero
-    flcnz[0] = (result_r == 32'h0);
+    // Carry
+    if (alu_op_i == `ALU_ADD)
+        flcnz[2] = (alu_a_i + alu_b_i) < alu_a_i;
+
+    // Less
+    if (alu_op_i == `ALU_SLT)
+        flcnz[3] = result_r[0];
 		
 	//}}}
 end

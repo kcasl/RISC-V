@@ -40,6 +40,7 @@ wire [2:0]  id_branch_w;
 wire [1:0]  id_mem_size_w;
 
 //Flags
+
 wire mulh_w;
 wire mulhsu_w;
 wire div_w;
@@ -68,6 +69,9 @@ reg [31:0] rd_value_w;
 reg        rd_we_w;
 
 wire ex_stall_w;
+wire ex_bubble_w;
+wire ex_ready_w;
+wire mem_access_w;
 // Memory signals
 reg  [4:0] ex_rd_index_r;
 reg [31:0] ex_alu_res_r;
@@ -108,44 +112,72 @@ always@(*) begin
 	alu_a = 32'h0;
 	alu_b = 32'h0;
 	
-	// Insert your code
-	//{{
-	//alu_op = id_alu_op_w;
-	//alu_a  = ra_value_r;
-	//alu_b  = (alu_imm_w || jal_w || load_w || store_w) ? id_imm_w : rb_value_r;
-	//}}
+	alu_op = id_alu_op_w;
+    alu_a  = ra_value_r;
+    alu_b  = (alu_imm_w || jal_w || load_w || store_w)
+             ? id_imm_w
+             : rb_value_r;
 end
 /* Branch, Jump and Link instructions */
-always @ (*) begin
-	branch_taken_w = 1'b0;
-	jump_addr_w = 32'h0;
-	case(id_branch_w)
-		`BR_JUMP: begin
-		end
-		`BR_EQ: begin
-		
-		end
-		`BR_NE: begin	
-		end
-		`BR_LT: begin		
-		// Insert your code
-		//{{{		
-			// Dummy Branch
-			branch_taken_w = 1'b1;
-		//}}}		
-		end
-		`BR_GE: begin
-		
-		end
-		`BR_LTU: begin
-		
-		end
-		`BR_GEU: begin
-		
-		end
-	endcase	
+always @(*) begin
+    branch_taken_w = 1'b0;
+    jump_addr_w    = 32'h0;
+
+    case(id_branch_w)
+        `BR_JUMP: begin
+            jump_addr_w = if_pc_d + id_imm_w;
+            branch_taken_w = 1'b1;
+        end
+        `BR_EQ: begin
+            jump_addr_w = if_pc_d + id_imm_w;
+
+            if (ra_value_r == rb_value_r)
+                branch_taken_w = 1'b1;
+            else
+                branch_taken_w = 1'b0;
+        end
+        `BR_NE: begin
+            jump_addr_w = if_pc_d + id_imm_w;
+
+            if (ra_value_r != rb_value_r)
+                branch_taken_w = 1'b1;
+            else
+                branch_taken_w = 1'b0;
+        end
+        `BR_LT: begin
+            jump_addr_w = if_pc_d + id_imm_w;
+
+            if ($signed(ra_value_r) < $signed(rb_value_r))
+                branch_taken_w = 1'b1;
+            else
+                branch_taken_w = 1'b0;
+        end
+        `BR_GE: begin
+            jump_addr_w = if_pc_d + id_imm_w;
+
+            if ($signed(ra_value_r) >= $signed(rb_value_r))
+                branch_taken_w = 1'b1;
+            else
+                branch_taken_w = 1'b0;
+        end
+        `BR_LTU: begin
+            jump_addr_w = if_pc_d + id_imm_w;
+
+            if (ra_value_r < rb_value_r)
+                branch_taken_w = 1'b1;
+            else
+                branch_taken_w = 1'b0;
+        end
+        `BR_GEU: begin
+            jump_addr_w = if_pc_d + id_imm_w;
+
+            if (ra_value_r >= rb_value_r)
+                branch_taken_w = 1'b1;
+            else
+                branch_taken_w = 1'b0;
+        end
+    endcase
 end
-//}}}
 assign ex_stall_w = 1'b0;
 //--------------------------------------------------------------------
 // Execution
@@ -196,18 +228,18 @@ end
 // Insert your code
 //{{{
 // Dummy part
-//assign  daddr_o = 32'h0;
-//assign  dwdata_o = 32'h0;
-//assign  dsize_o = `SIZE_WORD;
-//assign  drd_o = 1'b0;
-//assign  dwr_o = 1'b0;
+// assign  daddr_o = 32'h0;
+// assign  dwdata_o = 32'h0;
+// assign  dsize_o = `SIZE_WORD;
+// assign  drd_o = 1'b0;
+// assign  dwr_o = 1'b0;
 
 // Your code
-//assign daddr_o  = /*Insert your code*/;
-//assign dwdata_o = /*Insert your code*/;
-//assign dsize_o  = /*Insert your code*/;
-//assign drd_o    = /*Insert your code*/&& (mem_stall_r == 1'b0);
-//assign dwr_o    = /*Insert your code*/&& (mem_stall_r == 1'b0);
+assign daddr_o  = ex_alu_res_r;
+assign dwdata_o = ex_mem_data_r;
+assign dsize_o  = ex_mem_size_r;
+assign drd_o    = ex_mem_rd_r && (mem_stall_r == 1'b0);
+assign dwr_o    = ex_mem_wr_r && (mem_stall_r == 1'b0);
 //}}}
 
 assign mem_rdata_w =
@@ -232,10 +264,14 @@ always@(*) begin
 	// Insert your code
 	//{{{
 	// Dummy parts
-	//rd_index_w = id_rd_index_w;
-	//rd_value_w = alu_p;
-	//rd_we_w    = 1'b1;		
+	// rd_index_w = id_rd_index_w;
+	// rd_value_w = alu_p;
+	// rd_we_w    = 1'b1;		
 	//}}}		
+	rd_index_w = ex_rd_index_r;
+    rd_value_w = ex_mem_rd_r ? mem_rdata_w : ex_alu_res_r;
+    rd_we_w    = (ex_rd_index_r != 5'd0) &&
+                 (ex_mem_rd_r || !ex_mem_wr_r);
 end
 //-----------------------------------------------------------------
 // Program Counter

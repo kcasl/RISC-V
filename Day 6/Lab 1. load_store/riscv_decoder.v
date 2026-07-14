@@ -105,7 +105,7 @@ wire mulhu_w;
 wire divu_w ;
 wire remu_w ;
 
-
+wire jump_w;
 wire alu_reg_w;
 wire branch_w;
 
@@ -138,7 +138,7 @@ assign jalr_w   = (7'b1100111 == op_w) && (3'b000 == f3_w);
 
 //**** branch flags assign from f3 field and branch flag
 assign beq_w    = op_branch_w  && (3'b000 == f3_w);
-assign bne_w    = op_branch_w  && (3'b001 == f3_w);
+assign bne_w    = op_branch_w && (3'b001 == f3_w);
 assign blt_w    = op_branch_w  && (3'b100 == f3_w);
 assign bge_w    = op_branch_w  && (3'b101 == f3_w);
 assign bltu_w   = op_branch_w  && (3'b110 == f3_w);
@@ -180,7 +180,7 @@ assign sra_w    = op_alu_reg_w && (3'b101 == f3_w) && op_f7_alt_w;
 
 assign mul_w    = op_alu_reg_w && (3'b000 == f3_w) && op_f7_mul_w;
 assign mulh_w   = op_alu_reg_w && (3'b001 == f3_w) && op_f7_mul_w;	
-assign mulhsu_w = op_alu_reg_w && (3'b010 == f3_w) && op_f7_mul_w;   
+assign mulhsu_w = op_alu_reg_w && (3'b010 == f3_w) && op_f7_mul_w;
 assign mulhu_w  = op_alu_reg_w && (3'b011 == f3_w) && op_f7_mul_w;
 assign div_w    = op_alu_reg_w && (3'b100 == f3_w) && op_f7_mul_w;	
 assign divu_w   = op_alu_reg_w && (3'b101 == f3_w) && op_f7_mul_w;
@@ -227,20 +227,20 @@ assign id_rb_index_w = (load_w || jump_w || alu_imm_w) ? 5'd0 : rb_w;
 // Operands ALU
 assign id_alu_op_w =
     (add_w || addi_w || lui_w || load_w || store_w) ? `ALU_ADD :
-    (andi_w || and_w)   			? `ALU_AND :
-    (ori_w || or_w)     			? `ALU_OR :
-    (xori_w || xor_w)   			? `ALU_XOR :
-    (slti_w || slt_w)   			? `ALU_SLT :
-    (sltiu_w || sltu_w) 			? `ALU_SLTU :
-    (sll_w || slli_w)   			? `ALU_SLL :
-    (srl_w || srli_w) 				? `ALU_SRL :
-	(sra_w || srai_w) 				? `ALU_SRA :
-    (mulh_w || mulhsu_w || mulhu_w) ? `ALU_MULH :
-    (mul_w)                         ? `ALU_MULL :
-    (div_w || divu_w)               ? `ALU_DIV :
-    (rem_w || remu_w)               ? `ALU_REM :
-    (jal_w || jalr_w)               ? `ALU_NPC :
-    (auipc_w)                       ? `ALU_AUIPC : `ALU_SUB;
+    (andi_w || and_w)                    ? `ALU_AND :
+    (ori_w || or_w)                      ? `ALU_OR  :
+    (xori_w || xor_w)                    ? `ALU_XOR :
+    (slti_w || slt_w)                    ? `ALU_SLT :
+    (sltiu_w || sltu_w)                  ? `ALU_SLTU:
+    (sll_w || slli_w)   				 ? `ALU_SLL :
+    (srl_w || srli_w) 					 ? `ALU_SRL :
+	(sra_w || srai_w) 					 ? `ALU_SRA :
+    (mulh_w || mulhsu_w || mulhu_w)      ? `ALU_MULH:
+    (mul_w)                              ? `ALU_MULL:
+    (div_w || divu_w)                    ? `ALU_DIV :
+    (rem_w || remu_w)                    ? `ALU_REM :
+    (jal_w || jalr_w)                    ? `ALU_NPC :
+    (auipc_w)                            ? `ALU_AUIPC : `ALU_SUB;
 
 assign id_branch_w =
     beq_w  ? `BR_EQ :

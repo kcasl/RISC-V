@@ -60,6 +60,11 @@ assign drdata_o =
     (SIZE_BYTE == dsize_r) ? { 24'b0, rdata_byte_w } :
     (SIZE_HALF == dsize_r) ? { 16'b0, rdata_half_w } : drdata_r;
 
+initial begin
+    $readmemh(FIRMWARE, mem_r);
+    $display("mem0=%h", mem_r[0]);
+    $display("mem1=%h", mem_r[1]);
+end
 
 always @(posedge clk_i) begin
   if (reset_i) begin
@@ -82,6 +87,7 @@ end
 // Instruction memory: READ ONLY
 //-----------------------------------------------------------------------------
 always @(posedge clk_i) begin
+	// Insert your code here
   if (~reset_i)
     irdata_r <= 32'h0;
   else if (ird_i)
@@ -95,6 +101,7 @@ end
 //-----------------------------------------------------------------------------
 // Read operation
 always @(posedge clk_i) begin
+	// Insert your code here
   if (~reset_i)
     drdata_r <= 32'h0;
   else if (drd_i)
@@ -103,6 +110,7 @@ end
 
 // Write operation operation
 always @(posedge clk_i) begin
+	// Insert your code here
   if (dbe_w[0] && dwr_i)
     mem_r[daddr_i[DEPTH:2]][7:0] <= dwdata_w[7:0];
 
