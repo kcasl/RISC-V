@@ -13,7 +13,10 @@ wire  [1:0] dsize;
 wire        drd;
 wire        dwr;
 
+// riscv_memory #(.FIRMWARE("mem_opt1.hex"))
+// riscv_memory #(.FIRMWARE("mem_opt2.hex"))
 riscv_memory #(.FIRMWARE("mem.hex"))
+
 u_riscv_memory
 (
   ./*input         */clk_i(clk_i),
