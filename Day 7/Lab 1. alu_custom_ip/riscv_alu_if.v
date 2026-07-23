@@ -52,7 +52,7 @@ localparam W_REGS = 2;
 localparam REG_ALU_OP_I	 = 0;				//0x00
 localparam REG_ALU_A_I	 = 1;				//0x04
 localparam REG_ALU_B_I	 = 2;				//0x08
-//localparam REG_ALU_P_O 	 = /*Insert your code*/;	//0x0c	==> READ ONLY
+localparam REG_ALU_P_O  = 3;             	//0x0c	==> READ ONLY
 
 reg [3:0] alu_op_i;
 reg [31:0] alu_a_i, alu_b_i;
@@ -77,8 +77,8 @@ begin
 		/*Insert your code*/
 		if(sl_HSEL && sl_HREADY && ((sl_HTRANS == `TRANS_NONSEQ) || (sl_HTRANS == `TRANS_SEQ)))
 		begin
-			//q_sel_sl_reg <= /*Insert your code*/;
-			//q_ld_sl_reg  <= /*Insert your code*/;
+			q_sel_sl_reg <= sl_HADDR[3:2];
+        	q_ld_sl_reg  <= sl_HWRITE;
 		end
 		else begin
 			q_ld_sl_reg <= 1'b0;
@@ -104,10 +104,10 @@ begin
 			case(q_sel_sl_reg)
 				REG_ALU_OP_I:
 					alu_op_i <= sl_HWDATA[3:0];
-				//REG_ALU_A_I:
-				//	alu_a_i <= /*Insert your code*/;
-				//REG_ALU_B_I:
-				//	alu_b_i <= /*Insert your code*/;
+				REG_ALU_A_I:
+                    alu_a_i <= sl_HWDATA;
+                REG_ALU_B_I:
+                    alu_b_i <= sl_HWDATA;
 			endcase
 		end
 	end
@@ -121,12 +121,12 @@ begin:rdata
 	case(q_sel_sl_reg)
 		REG_ALU_OP_I:
 			out_sl_HRDATA = alu_op_i;	
-		//REG_ALU_A_I:
-		//	out_sl_HRDATA = /*Insert your code*/;
-		//REG_ALU_B_I:
-		//	out_sl_HRDATA = /*Insert your code*/;
-		//REG_ALU_P_O:
-		//	out_sl_HRDATA = /*Insert your code*/;
+		REG_ALU_A_I:
+            out_sl_HRDATA = alu_a_i;
+        REG_ALU_B_I:
+            out_sl_HRDATA = alu_b_i;
+        REG_ALU_P_O:
+            out_sl_HRDATA = alu_p_o;
 	endcase
 end
 //----------------------------------------------------------

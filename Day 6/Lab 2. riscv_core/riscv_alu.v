@@ -62,7 +62,7 @@ begin
     if (alu_op_i == `ALU_SLT)
         flcnz[3] = result_r[0];
 
-    // Overflow Flag (F)
+    // Overflow Flag
     if (alu_op_i == `ALU_ADD)
     begin
         if ((alu_a_i[31] == alu_b_i[31]) &&
