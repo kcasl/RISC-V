@@ -31,17 +31,17 @@ always @(posedge clk, negedge rst_n) begin
             out_r0 <= ({1'b0, r0} + {1'b0, value} > 255) ? 255 : r0 + value;
             out_g0 <= ({1'b0, g0} + {1'b0, value} > 255) ? 255 : g0 + value;
             out_b0 <= ({1'b0, b0} + {1'b0, value} > 255) ? 255 : b0 + value;
-            //out_r1 <= ({1'b0, r1} + {1'b0, value} > 255) ? 255 : /* Insert your code here*/;
-            //out_g1 <= ({1'b0, g1} + {1'b0, value} > 255) ? 255 : /* Insert your code here*/;
-            //out_b1 <= ({1'b0, b1} + {1'b0, value} > 255) ? 255 : /* Insert your code here*/;
+            out_r1 <= ({1'b0, r1} + {1'b0, value} > 255) ? 255 : r1 + value;
+            out_g1 <= ({1'b0, g1} + {1'b0, value} > 255) ? 255 : g1 + value;
+            out_b1 <= ({1'b0, b1} + {1'b0, value} > 255) ? 255 : b1 + value;
         end
 	else begin                //darker
             out_r0 <= (r0 < value) ? 0 : r0 - value;
             out_g0 <= (g0 < value) ? 0 : g0 - value;
             out_b0 <= (b0 < value) ? 0 : b0 - value;
-            //out_r1 <= (r1 < value) ? 0 : /* Insert your code here*/;
-            //out_g1 <= (g1 < value) ? 0 : /* Insert your code here*/;
-            //out_b1 <= (b1 < value) ? 0 : /* Insert your code here*/;
+            out_r1 <= (r1 < value) ? 0 : r1 - value;
+            out_g1 <= (g1 < value) ? 0 : g1 - value;
+            out_b1 <= (b1 < value) ? 0 : b1 - value;
         end
     end
 end

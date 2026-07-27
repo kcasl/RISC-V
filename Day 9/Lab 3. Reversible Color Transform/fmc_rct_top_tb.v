@@ -1,8 +1,8 @@
 `timescale 1ns/1ns
 
-`define INPUTFILENAME		"./img/kodim03.hex"
-`define OUTPUTFILENAME		"./out/kodim03.bmp"
-`define OUTPUTFILENAME_RCT	"./out/kodim03_ycbcr.bmp"
+`define INPUTFILENAME		"kodim03.hex"
+`define OUTPUTFILENAME		"kodim03.bmp"
+`define OUTPUTFILENAME_RCT	"kodim03_ycbcr.bmp"
 module fmc_rct_top_tb
 #(
     parameter  IMG_PIX_W  =  8,
@@ -39,6 +39,7 @@ wire [IMG_PIX_W-1 : 0] recon_data_G1;
 wire [IMG_PIX_W-1 : 0] recon_data_B1; 
 
 wire recon_valid;
+wire enc_done;
 
 //wire [31 : 0] out_spiht;
 //wire 		  mem_enable;

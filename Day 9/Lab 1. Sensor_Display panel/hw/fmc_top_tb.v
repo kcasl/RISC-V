@@ -1,8 +1,8 @@
 `timescale 1ns/1ns
 
 `define INPUTFILENAME		"kodim03.hex"
-`define OUTPUTFILENAME		"./out/kodim03.bmp"
-`define OUTPUTFILENAME_RCT	"./out/kodim03_ycbcr.bmp"
+`define OUTPUTFILENAME		"kodim03.bmp"
+`define OUTPUTFILENAME_RCT	"kodim03_ycbcr.bmp"
 module fmc_top_tb
 #(
     parameter  IMG_PIX_W  =  8,

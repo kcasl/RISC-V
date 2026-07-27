@@ -1,8 +1,8 @@
 `timescale 1ns/1ns
 
-`define INPUTFILENAME		"./img/kodim03.hex"
-`define OUTPUTFILENAME		"./out/kodim03.bmp"
-`define OUTPUTFILENAME_RCT	"./out/kodim03_ycbcr.bmp"
+`define INPUTFILENAME		"kodim03.hex"
+`define OUTPUTFILENAME		"kodim03.bmp"
+`define OUTPUTFILENAME_RCT	"kodim03_ycbcr.bmp"
 module fmc_top_tb
 #(
     parameter  IMG_PIX_W  =  8,
@@ -43,7 +43,7 @@ wire [IMG_PIX_W-1 : 0] recon_data_G1;
 wire [IMG_PIX_W-1 : 0] recon_data_B1; 
 
 wire recon_valid;
-
+wire enc_done;
 //wire [31 : 0] out_spiht;
 //wire 		  mem_enable;
 //wire 		  mem_rwmode;
@@ -77,11 +77,22 @@ sensor_model
 
 /* Insert your code here */
 // Dummy 
-assign br_mode = 1'b1;
-assign br_value = 8'd0;
+// assign br_mode = 1'b1;
+// assign br_value = 8'd0;
 //{{{
 //assign br_mode = ;	//1: brighter, 0: darker
 //assign br_value = ;	//amount of adjustment
+// assign br_mode = 1'b1;
+// assign br_value = 8'd50;
+
+// assign br_mode = 1'b1;
+// assign br_value = 8'd100;
+
+// assign br_mode = 1'b0;
+// assign br_value = 8'd50;
+
+assign br_mode = 1'b0;
+assign br_value = 8'd100;
 //}}}
 brightness_adjustment 
 #(.IMG_PIX_W(IMG_PIX_W),

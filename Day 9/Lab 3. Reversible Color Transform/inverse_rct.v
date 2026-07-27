@@ -45,9 +45,9 @@ always @(posedge clk or negedge rst_n) begin
             r0_tmp <= cr0 + tmp0;
             g0_tmp <= tmp0;
             b0_tmp <= cb0 + tmp0;
-            //r1_tmp <= /*Insert your code here*/;
-            //g1_tmp <= /*Insert your code here*/;
-            //b1_tmp <= /*Insert your code here*/;
+            r1_tmp <= cr1 + tmp1;
+            g1_tmp <= tmp1;
+            b1_tmp <= cb1 + tmp1;
             out_valid <= 1;
         end else begin
             r0_tmp <= 0;

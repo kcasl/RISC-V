@@ -1,7 +1,7 @@
 module sensor_model
 #(parameter WIDTH 	= 768,
 			HEIGHT 	= 512,
-			INFILE  = "./img/kodim03.hex",
+			INFILE  = "kodim03.hex",
 			START_UP_DELAY = 100,
 			VSYNC_CYCLE	= 3,
 			VSYNC_DELAY = 3,
@@ -80,7 +80,7 @@ always@(start) begin
 				org_R[WIDTH*i+j] = temp_BMP[WIDTH*3*(HEIGHT-i-1)+3*j+0];
 				org_G[WIDTH*i+j] = temp_BMP[WIDTH*3*(HEIGHT-i-1)+3*j+1];
 				/* Insert your code here */           
-				//org_B[] = ;
+				org_B[WIDTH*i+j] = temp_BMP[WIDTH*3*(HEIGHT-i-1)+3*j+2];
                 /*************************/			
             end
         end
@@ -130,14 +130,14 @@ always @(*) begin
                     nstate = ST_VSYNC;
         end	
         ST_HSYNC: begin
-                //if(ctrl_hsync_cnt == /* Insert your code here */) 
-                //    nstate = /* Insert your code here */;
-                //else
-                //    nstate = ST_HSYNC;
+                if(ctrl_hsync_cnt == HSYNC_DELAY)
+                    nstate = ST_DATA;
+                else
+                    nstate = ST_HSYNC;
         end		
         ST_DATA: begin
                 if(ctrl_done) begin   //end of frame
-					//nstate = /* Insert your code here */;
+					nstate = ST_IDLE;
 				end
                 else begin
                     if(col == WIDTH - 2)    //end of line
@@ -205,8 +205,11 @@ begin
 			data_count <= data_count + 1;
     end
 end
-assign ctrl_done = (data_count == 196607)? 1'b1: 1'b0;
 
+//assign ctrl_done = (data_count == 196607)? 1'b1: 1'b0;
+localparam FRAME_SIZE = WIDTH * HEIGHT / 2;
+
+assign ctrl_done = (data_count == FRAME_SIZE-1);
 
 // Output
 always @(*) begin
@@ -223,12 +226,10 @@ always @(*) begin
         HSYNC   = 1'b1;
         DATA_R0 = org_R[WIDTH * row + col   ];
         DATA_G0 = org_G[WIDTH * row + col   ];
-        /* Insert your code here */
-        //DATA_B0 ;                                         
+        DATA_B0 = org_B[WIDTH * row + col   ];                                     
         DATA_R1 = org_R[WIDTH * row + col +1];
         DATA_G1 = org_G[WIDTH * row + col +1];
-        /* Insert your code here */
-        //DATA_B1 ;                             	
+        DATA_B1 = org_B[WIDTH * row + col +1];                           	
         end
 end
 
