@@ -88,6 +88,10 @@ riscv_multiplier_if u_riscv_multiplier_if (
 	.out_sl_HRDATA(w_RISC2AHB_mul_HRDATA) 
 	);
 	
+`define RISCV_ALU_BASE_ADDR 32'hE000_0000
+`define RISCV_MULTIPLIER_BASE_ADDR 32'hE000_1000
+`define RISCV_BASE_ADDRESS_MASK 32'hFFFF_F000
+
 //---------------------------------------------------------------
 // Select
 //---------------------------------------------------------------
@@ -96,10 +100,10 @@ always@(*) begin
 	sl_HSEL_multiplier =1'b0;
 	//Insert your code
 	//{{{
-	if (w_RISC2AHB_mst_HADDR[31:12] == `RISCV_ALU_BASE_ADDR[31:12])
-        sl_HSEL_alu = 1'b1;
-    else if (w_RISC2AHB_mst_HADDR[31:12] == `RISCV_MULTIPLIER_BASE_ADDR[31:12])
-        sl_HSEL_multiplier = 1'b1;
+	if((w_RISC2AHB_mst_HADDR & `RISCV_BASE_ADDRESS_MASK) == `RISCV_ALU_BASE_ADDR)
+		sl_HSEL_alu = 1'b1;
+	if((w_RISC2AHB_mst_HADDR & `RISCV_BASE_ADDRESS_MASK) == `RISCV_MULTIPLIER_BASE_ADDR)
+		sl_HSEL_multiplier = 1'b1;
 	//}}}
 end
 

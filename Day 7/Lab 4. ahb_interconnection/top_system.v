@@ -48,8 +48,9 @@ parameter N_SLAVE	=	2;
 parameter W_SLAVE	=	$clog2(N_SLAVE); //GetBitWidth(N_SLAVE);
 
 parameter ADDR_START_MAP = {
-		/* Insert your code*/
-	};
+        `RISCV_MULTIPLIER_BASE_ADDR,
+        `RISCV_ALU_BASE_ADDR
+};
 
 parameter ADDR_END_MAP	 = {
 		`RISCV_MULTIPLIER_BASE_ADDR,
@@ -57,9 +58,10 @@ parameter ADDR_END_MAP	 = {
 	};
 
 
-parameter ADDR_MASK	= {
-		/* Insert your code*/
-	};
+parameter ADDR_MASK = {
+        32'hFFFFF000,
+        32'hFFFFF000
+};
 //}}}
 
 wire	[N_MASTER-1:0]             w_AHB_IC_ma_HREADY        ;
@@ -148,18 +150,19 @@ assign	w_AHB_IC_sl_HRDATA	[0*32+:32]	=	out_alu_sl_HRDATA;
 
 
 //  2. AHB2MULTIPLIER
-//assign	mul_sl_HSEL						=	/* Insert your code */;
-//assign	mul_sl_HADDR					=	/* Insert your code */;
-//assign	mul_sl_HTRANS					=	/* Insert your code */;
-//assign  	mul_sl_HBURST					=	/* Insert your code */;
-//assign	mul_sl_HSIZE					=	/* Insert your code */;
-//assign	mul_sl_HPROT					=	/* Insert your code */;
-//assign	mul_sl_HWRITE					=	/* Insert your code */;
-//assign	mul_sl_HWDATA					=	/* Insert your code */;
-//assign	mul_sl_HREADY					=	/* Insert your code */;
-//assign	w_AHB_IC_sl_HREADY	[1]			=	/* Insert your code */;
-//assign	w_AHB_IC_sl_HRESP	[1*2+:2]	=	/* Insert your code */;
-//assign	w_AHB_IC_sl_HRDATA	[1*32+:32]	=	/* Insert your code */;
+assign mul_sl_HSEL      = w_AHB_IC_out_sl_HSEL[1];
+assign mul_sl_HADDR     = w_AHB_IC_out_sl_HADDR[1*32+:32];
+assign mul_sl_HTRANS    = w_AHB_IC_out_sl_HTRANS[1*2+:2];
+assign mul_sl_HBURST    = w_AHB_IC_out_sl_HBURST[1*`W_BURST+:`W_BURST];
+assign mul_sl_HSIZE     = w_AHB_IC_out_sl_HSIZE[1*3+:3];
+assign mul_sl_HPROT     = w_AHB_IC_out_sl_HPROT[1*4+:4];
+assign mul_sl_HWRITE    = w_AHB_IC_out_sl_HWRITE[1];
+assign mul_sl_HWDATA    = w_AHB_IC_out_sl_HWDATA[1*32+:32];
+assign mul_sl_HREADY    = w_AHB_IC_out_sl_HREADY[1];
+
+assign w_AHB_IC_sl_HREADY[1]       = out_mul_sl_HREADY;
+assign w_AHB_IC_sl_HRESP[1*2+:2]   = out_mul_sl_HRESP;
+assign w_AHB_IC_sl_HRDATA[1*32+:32]= out_mul_sl_HRDATA;
 
 
 //---------------------------------------------------------------
@@ -192,9 +195,9 @@ riscv_alu_if u_riscv_alu_if (
 	.sl_HADDR(alu_sl_HADDR), 
 	.sl_HWRITE(alu_sl_HWRITE), 
 	.sl_HWDATA(alu_sl_HWDATA),
-	.out_sl_HREADY(/* Insert your code*/), 
-	.out_sl_HRESP (/* Insert your code*/), 
-	.out_sl_HRDATA(/* Insert your code*/) 
+	.out_sl_HREADY(out_alu_sl_HREADY),
+	.out_sl_HRESP (out_alu_sl_HRESP),
+	.out_sl_HRDATA(out_alu_sl_HRDATA)
 	);
 
 // Multiplier
@@ -209,9 +212,9 @@ riscv_multiplier_if u_riscv_multiplier_if (
 	.sl_HADDR(mul_sl_HADDR), 
 	.sl_HWRITE(mul_sl_HWRITE), 
 	.sl_HWDATA(mul_sl_HWDATA),
-	.out_sl_HREADY(/* Insert your code*/), 
-	.out_sl_HRESP (/* Insert your code*/), 
-	.out_sl_HRDATA(/* Insert your code*/) 
+	.out_sl_HREADY(out_mul_sl_HREADY),
+	.out_sl_HRESP (out_mul_sl_HRESP),
+	.out_sl_HRDATA(out_mul_sl_HRDATA)
 	);
 //---------------------------------------------------------------
 // AHB Interconnect

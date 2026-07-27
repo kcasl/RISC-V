@@ -1,6 +1,6 @@
 `timescale 1ns/1ns
 
-`define INPUTFILENAME		"./img/kodim03.hex"
+`define INPUTFILENAME		"kodim03.hex"
 `define OUTPUTFILENAME		"./out/kodim03.bmp"
 `define OUTPUTFILENAME_RCT		"./out/kodim03_ycbcr.bmp"
 module sensor_model_tb

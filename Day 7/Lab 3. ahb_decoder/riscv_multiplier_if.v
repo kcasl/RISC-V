@@ -112,15 +112,16 @@ begin
 		if(q_ld_sl_reg == 1)
 		begin
 			case(q_sel_sl_reg) 
-				REG_MUL_OP_I: alu_op_i <= sl_HWDATA;
+				REG_MUL_OP_I: alu_op_i <= sl_HWDATA[3:0];
 				REG_MUL_A_I: alu_a_i <= sl_HWDATA;
 				REG_MUL_B_I: alu_b_i <= sl_HWDATA;
-				REG_MUL_A_SIGNED: a_signed <= sl_HWDATA;
-				REG_MUL_B_SIGNED: b_signed <= sl_HWDATA;	
+				REG_MUL_A_SIGNED: a_signed <= sl_HWDATA[0];
+				REG_MUL_B_SIGNED: b_signed <= sl_HWDATA[0];	
 			endcase
 		end
 	end
 end
+
 
 assign out_sl_HREADY = 1'b1;
 assign out_sl_HRESP = `RESP_OKAY;
