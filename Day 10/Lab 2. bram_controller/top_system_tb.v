@@ -109,8 +109,19 @@ initial begin
 	q_frame_trans_delay = FRAME_TRANS_DELAY;
 	q_data_count 		= DATA_COUNT;
 	q_start 			= 1'b1;
+	
+	// q_br_mode			<= 1'b1;
+	// q_br_value			<= 8'd50;	
+
+	// q_br_mode			<= 1'b1;
+	// q_br_value			<= 8'd100;	
+
 	q_br_mode			<= 1'b0;
-	q_br_value			<= 8'h0;		
+	q_br_value			<= 8'd50;	
+
+	// q_br_mode			<= 1'b0;
+	// q_br_value			<= 8'd100;	
+
 	u_top_system.u_riscv_dummy.task_AHBinit();
 	
 	#(p/2) HRESETn = 1;

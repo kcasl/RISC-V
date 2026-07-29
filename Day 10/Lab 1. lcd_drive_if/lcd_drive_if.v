@@ -172,7 +172,7 @@ begin
 					q_width <= sl_HWDATA[W_SIZE-1 :0];
 				end 
 				LCD_DRIVE_HEIGHT: begin 
-					/* Insert your code */
+					q_height <= sl_HWDATA[W_SIZE-1:0];
 				end
 				LCD_DRIVE_START_UP_DELAY: begin 
 					q_start_up_delay <= sl_HWDATA[W_DELAY-1 :0];	
@@ -190,16 +190,16 @@ begin
 					q_frame_trans_delay <= sl_HWDATA[W_DELAY-1 :0];	
 				end
 				LCD_DRIVE_DATA_COUNT: begin 
-					/* Insert your code */
+					q_data_count <= sl_HWDATA[W_FRAME_SIZE-1:0];
 				end
 				LCD_DRIVE_START: begin 
-					/* Insert your code */
+					q_start <= sl_HWDATA[0];
 				end
 				LCD_DRIVE_BR_MODE: begin 
-					/* Insert your code */
+					q_br_mode <= sl_HWDATA[0];
 				end
 				LCD_DRIVE_BR_VALUE: begin 
-					/* Insert your code */
+					q_br_value <= sl_HWDATA[IMG_PIX_W-1:0];
 				end
 			endcase
 		end
@@ -216,7 +216,7 @@ begin:rdata
 			out_sl_HRDATA = q_width;
 		end
 		LCD_DRIVE_HEIGHT: begin 
-			/* Insert your code */
+			out_sl_HRDATA = q_height;
 		end
 		LCD_DRIVE_START_UP_DELAY: begin 
 			out_sl_HRDATA = q_start_up_delay;
@@ -234,16 +234,16 @@ begin:rdata
 			out_sl_HRDATA = q_frame_trans_delay;
 		end
 		LCD_DRIVE_DATA_COUNT: begin 
-			/* Insert your code */
+			out_sl_HRDATA = q_data_count;
 		end
 		LCD_DRIVE_START: begin 
-			/* Insert your code */
+			out_sl_HRDATA = q_start;
 		end
 		LCD_DRIVE_BR_MODE: begin 
-			/* Insert your code */
+			out_sl_HRDATA = q_br_mode;
 		end
 		LCD_DRIVE_BR_VALUE: begin 
-			/* Insert your code */
+			out_sl_HRDATA = q_br_value;
 		end
 	endcase
 end
@@ -262,10 +262,10 @@ end
 always @(*) begin
     case(cstate)
 	ST_IDLE: begin
-                //if(/*Insert your code*/)
-                //    nstate = ST_VSYNC;
-                //else
-                //    nstate = ST_IDLE;
+                if(q_start)
+					nstate = ST_VSYNC;
+				else
+					nstate = ST_IDLE;
         end		
         ST_VSYNC: begin
                 if(ctrl_vsync_cnt == q_start_up_delay) 
@@ -274,19 +274,19 @@ always @(*) begin
                     nstate = ST_VSYNC;
         end	
         ST_HSYNC: begin
-                //if(ctrl_hsync_cnt == /*Insert your code*/) 
-                //    nstate = ST_DATA;
-                //else
-                //    nstate = ST_HSYNC;
+                if(ctrl_hsync_cnt == q_hsync_delay) 
+                   nstate = ST_DATA;
+                else
+                   nstate = ST_HSYNC;
         end		
         ST_DATA: begin
                 if(end_frame)    //end of frame
                     nstate = ST_IDLE;
                 else begin
-                    //if(col == /*Insert your code*/)//end of line
-                    //    nstate = ST_HSYNC;
-                    //else
-                    //    nstate = ST_DATA;
+                    if(col == q_width - 2) //end of line
+                       nstate = ST_HSYNC;
+                    else
+                       nstate = ST_DATA;
                 end
         end
         default: nstate = ST_IDLE;
@@ -331,10 +331,10 @@ begin
 			if(col == q_width - 2) begin
 				row <= row + 1;
 			end
-			//if(col == /*Insert your code*/) 
-			//	col <= 0;
-			//else 
-			//	col <= col + 2;
+			if(col == q_width - 2) 
+				col <= 0;
+			else 
+				col <= col + 2;
 		end
 	end
 end
@@ -352,8 +352,7 @@ begin
 		end
     end
 end
-//assign end_frame = (data_count == /*Insert your code*/)? 1'b1: 1'b0;			
-
+assign end_frame = (data_count == q_data_count - 1) ? 1'b1 : 1'b0;
 
 //-------------------------------------------------
 // Frame buffer

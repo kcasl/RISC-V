@@ -212,32 +212,32 @@ assign	w_AHB_IC_sl_HRESP	[1*2+:2]	=	out_mul_sl_HRESP;
 assign	w_AHB_IC_sl_HRDATA	[1*32+:32]	=	out_mul_sl_HRDATA;
 
 //  3. AHB2LCDDRIVE
-//assign	lcd_sl_HSEL			=	/*Insert your code*/;
-//assign	lcd_sl_HADDR		=	/*Insert your code*/;
-//assign	lcd_sl_HTRANS		=	/*Insert your code*/;
-//assign    lcd_sl_HBURST		=	/*Insert your code*/;
-//assign	lcd_sl_HSIZE		=	/*Insert your code*/;
-//assign	lcd_sl_HPROT		=	/*Insert your code*/;
-//assign	lcd_sl_HWRITE		=	/*Insert your code*/;
-//assign	lcd_sl_HWDATA		=	/*Insert your code*/;
-//assign	lcd_sl_HREADY		=	/*Insert your code*/;
-//assign	/*Insert your code*/=	out_lcd_sl_HREADY;
-//assign	/*Insert your code*/=	out_lcd_sl_HRESP;
-//assign	/*Insert your code*/=	out_lcd_sl_HRDATA;
+assign lcd_sl_HSEL                   = w_AHB_IC_out_sl_HSEL[2];
+assign lcd_sl_HADDR                  = w_AHB_IC_out_sl_HADDR[2*32+:32];
+assign lcd_sl_HTRANS                 = w_AHB_IC_out_sl_HTRANS[2*2+:2];
+assign lcd_sl_HBURST                 = w_AHB_IC_out_sl_HBURST[2*`W_BURST+:`W_BURST];
+assign lcd_sl_HSIZE                  = w_AHB_IC_out_sl_HSIZE[2*3+:3];
+assign lcd_sl_HPROT                  = w_AHB_IC_out_sl_HPROT[2*4+:4];
+assign lcd_sl_HWRITE                 = w_AHB_IC_out_sl_HWRITE[2];
+assign lcd_sl_HWDATA                 = w_AHB_IC_out_sl_HWDATA[2*32+:32];
+assign lcd_sl_HREADY                 = w_AHB_IC_out_sl_HREADY[2];
+assign w_AHB_IC_sl_HREADY[2]         = out_lcd_sl_HREADY;
+assign w_AHB_IC_sl_HRESP[2*2+:2]     = out_lcd_sl_HRESP;
+assign w_AHB_IC_sl_HRDATA[2*32+:32]  = out_lcd_sl_HRDATA;
 
 //  4. AHB2MEM
-//assign	mem_sl_HSEL			=	/*Insert your code*/;
-//assign	mem_sl_HADDR		=	/*Insert your code*/;
-//assign	mem_sl_HTRANS		=	/*Insert your code*/;
-//assign  	mem_sl_HBURST		=	/*Insert your code*/;
-//assign	mem_sl_HSIZE		=	/*Insert your code*/;
-//assign	mem_sl_HPROT		=	/*Insert your code*/;
-//assign	mem_sl_HWRITE		=	/*Insert your code*/;
-//assign	mem_sl_HWDATA		=	/*Insert your code*/;
-//assign	mem_sl_HREADY		=	/*Insert your code*/;
-//assign	/*Insert your code*/=	out_mem_sl_HREADY;
-//assign	/*Insert your code*/=	out_mem_sl_HRESP;
-//assign	/*Insert your code*/=	out_mem_sl_HRDATA;
+assign mem_sl_HSEL                   = w_AHB_IC_out_sl_HSEL[3];
+assign mem_sl_HADDR                  = w_AHB_IC_out_sl_HADDR[3*32+:32];
+assign mem_sl_HTRANS                 = w_AHB_IC_out_sl_HTRANS[3*2+:2];
+assign mem_sl_HBURST                 = w_AHB_IC_out_sl_HBURST[3*`W_BURST+:`W_BURST];
+assign mem_sl_HSIZE                  = w_AHB_IC_out_sl_HSIZE[3*3+:3];
+assign mem_sl_HPROT                  = w_AHB_IC_out_sl_HPROT[3*4+:4];
+assign mem_sl_HWRITE                 = w_AHB_IC_out_sl_HWRITE[3];
+assign mem_sl_HWDATA                 = w_AHB_IC_out_sl_HWDATA[3*32+:32];
+assign mem_sl_HREADY                 = w_AHB_IC_out_sl_HREADY[3];
+assign w_AHB_IC_sl_HREADY[3]         = out_mem_sl_HREADY;
+assign w_AHB_IC_sl_HRESP[3*2+:2]     = out_mem_sl_HRESP;
+assign w_AHB_IC_sl_HRDATA[3*32+:32]  = out_mem_sl_HRDATA;
 
 //---------------------------------------------------------------
 // Components

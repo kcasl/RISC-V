@@ -183,18 +183,18 @@ assign	w_AHB_IC_sl_HRESP	[1*2+:2]	=	out_mul_sl_HRESP;
 assign	w_AHB_IC_sl_HRDATA	[1*32+:32]	=	out_mul_sl_HRDATA;
 
 //  3. AHB2LCDDRIVE
-//assign	lcd_sl_HSEL			=	/*Insert your code*/;
-//assign	lcd_sl_HADDR		=	/*Insert your code*/;
-//assign	lcd_sl_HTRANS		=	/*Insert your code*/;
-//assign  lcd_sl_HBURST		=	/*Insert your code*/;
-//assign	lcd_sl_HSIZE		=	/*Insert your code*/;
-//assign	lcd_sl_HPROT		=	/*Insert your code*/;
-//assign	lcd_sl_HWRITE		=	/*Insert your code*/;
-//assign	lcd_sl_HWDATA		=	/*Insert your code*/;
-//assign	lcd_sl_HREADY		=	/*Insert your code*/;
-//assign	/*Insert your code*/=	out_lcd_sl_HREADY;
-//assign	/*Insert your code*/=	out_lcd_sl_HRESP;
-//assign	/*Insert your code*/=	out_lcd_sl_HRDATA;
+assign lcd_sl_HSEL                      = w_AHB_IC_out_sl_HSEL    [2];
+assign lcd_sl_HADDR                     = w_AHB_IC_out_sl_HADDR   [2*32+:32];
+assign lcd_sl_HTRANS                    = w_AHB_IC_out_sl_HTRANS  [2*2+:2];
+assign lcd_sl_HBURST                    = w_AHB_IC_out_sl_HBURST  [2*`W_BURST+:`W_BURST];
+assign lcd_sl_HSIZE                     = w_AHB_IC_out_sl_HSIZE   [2*3+:3];
+assign lcd_sl_HPROT                     = w_AHB_IC_out_sl_HPROT   [2*4+:4];
+assign lcd_sl_HWRITE                    = w_AHB_IC_out_sl_HWRITE  [2];
+assign lcd_sl_HWDATA                    = w_AHB_IC_out_sl_HWDATA  [95:64];
+assign lcd_sl_HREADY                    = w_AHB_IC_out_sl_HREADY  [2];
+assign w_AHB_IC_sl_HREADY [2]           = out_lcd_sl_HREADY;
+assign w_AHB_IC_sl_HRESP  [2*2+:2]      = out_lcd_sl_HRESP;
+assign w_AHB_IC_sl_HRDATA [2*32+:32]    = out_lcd_sl_HRDATA;
 
 //---------------------------------------------------------------
 // Components
@@ -327,13 +327,13 @@ u_ahb_lite_interconnect(
 	,./*input  [N_SLAVE-1:0]              */sl_HREADY        (w_AHB_IC_sl_HREADY       	)
 	,./*input  [N_SLAVE*2-1:0]            */sl_HRESP         (w_AHB_IC_sl_HRESP         )
 	,./*input  [N_SLAVE*W_DATA-1:0]       */sl_HRDATA        (w_AHB_IC_sl_HRDATA        )
-	,./*output [N_MASTER*`W_MA_STATE-1:0] */int_ma_q_state   (/*OPEN for debugging    */) 	
-	,./*output [N_SLAVE*`W_SL_STATE-1:0]  */int_sl_q_state   (/*OPEN for debugging    */) 		
-	,./*output [N_SLAVE*N_MASTER-1:0] 	  */int_sl_active	 (/*OPEN for debugging    */) 		
-	,./*output [N_MASTER*N_SLAVE-1:0] 	  */int_ma_active	 (/*OPEN for debugging    */) 		
-	,./*output [N_MASTER-1:0] 			  */int_ma_held_trans(/*OPEN for debugging    */) 	
-	,./*output [N_MASTER*`W_TRANS-1:0] 	  */int_ma_HTRANS    (/*OPEN for debugging    */) 	
-	,./*output [N_SLAVE-1:0] 			  */int_sl_HREADY    (/*OPEN for debugging    */) 	
+	,./*output [N_MASTER*`W_MA_STATE-1:0] */int_ma_q_state   () 	
+	,./*output [N_SLAVE*`W_SL_STATE-1:0]  */int_sl_q_state   () 		
+	,./*output [N_SLAVE*N_MASTER-1:0] 	  */int_sl_active	 () 		
+	,./*output [N_MASTER*N_SLAVE-1:0] 	  */int_ma_active	 () 		
+	,./*output [N_MASTER-1:0] 			  */int_ma_held_trans() 	
+	,./*output [N_MASTER*`W_TRANS-1:0] 	  */int_ma_HTRANS    () 	
+	,./*output [N_SLAVE-1:0] 			  */int_sl_HREADY    () 	
 ); // }}}
 
 endmodule
