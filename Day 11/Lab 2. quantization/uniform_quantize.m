@@ -13,3 +13,14 @@ output = x;
 output_store = x;
 
 % Insert your code
+neg_end = -2^(nbit-1);
+pos_end =  2^(nbit-1)-1;
+
+output = 2 * round(x./step + 0.5) - 1;
+output(output_store > pos_end) = pos_end;
+output(output_store < neg_end) = neg_end;
+
+% Output
+output_store = (output-1)/2;
+
+end

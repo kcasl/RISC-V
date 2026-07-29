@@ -28,18 +28,17 @@ h_out = floor((h - f + p) / s + 1);	% height
 out = zeros(h_out,w_out,c_out);		% buffer of output feature maps
 
 % Convolution
-for k = 1:c_out % Number of output channels            
-	win = kernel(:,:,:,k);	% Weight
+for k = 1:c_out				% Number of output channels
     for i = 1:h_out			% Row
         for j = 1:w_out		% Column
-			% Input feature map
-			din = pad_img(1+(i-1)*s:1+(i-1)*s+f-1, 1+(j-1)*s:1+(j-1)*s+f-1, :);            
-            % Element-wise Muliplication => Products
-            scalar = win .* din;            
-			% Sum (Sum of Products): Adder tree
-            out(i,j,k) = sum(scalar(:));
+			% Insert your code
+			sum_val = 0;
+            for ch = 1:c
+                region = pad_img((i-1)*s+1:(i-1)*s+f, (j-1)*s+1:(j-1)*s+f, ch);
+                sum_val = sum_val + sum(sum(region .* kernel(:,:,ch,k)));
+            end
+
+            out(i,j,k) = sum_val;
         end
     end
-end
-
 end

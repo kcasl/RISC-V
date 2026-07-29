@@ -32,7 +32,13 @@ for k = 1:c_out				% Number of output channels
     for i = 1:h_out			% Row
         for j = 1:w_out		% Column
 			% Insert your code
-			
+			sum_val = 0;
+            for ch = 1:c
+                region = pad_img((i-1)*s+1:(i-1)*s+f, (j-1)*s+1:(j-1)*s+f, ch);
+                sum_val = sum_val + sum(sum(region .* kernel(:,:,ch,k)));
+            end
+
+            out(i,j,k) = sum_val;
         end
     end
 end

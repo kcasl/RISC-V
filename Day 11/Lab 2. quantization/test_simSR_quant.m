@@ -74,5 +74,47 @@ for i = 1:size(conv_out, 3)
 end
 
 % Insert your code for other layers
+conv_out2 = convol2(conv_out_relu, wq2, 1, 2);
 
+for j = 1:size(conv_out2,3)
+    conv_out2(:,:,j) = conv_out2(:,:,j) + bq2(j);
+end
+
+conv_out2_relu = hwu_relu_quantize(conv_out2, step, nbits, biases_shift);
+
+for i = 1:size(conv_out2,3)
+    figure(2)
+    subplot(1,2,1)
+    imshow(conv_out2(:,:,i),[]);
+    title(['ch = ',num2str(i)]);
+
+    subplot(1,2,2)
+    imshow(conv_out2_relu(:,:,i),[]);
+    title('After ReLU');
+
+    saveas(gcf,['output/2_',num2str(i),'.bmp']);
+    pause(1)
+end
+
+conv_out3 = convol2(conv_out2_relu, wq3, 1, 2);
+
+for j = 1:size(conv_out3,3)
+    conv_out3(:,:,j) = conv_out3(:,:,j) + bq3(j);
+end
+
+conv_out3_linear = hwu_linear_quantize(conv_out3, step, nbits, biases_shift);
+
+for i = 1:size(conv_out3,3)
+    figure(3)
+    subplot(1,2,1)
+    imshow(conv_out3(:,:,i),[]);
+    title(['ch = ',num2str(i)]);
+
+    subplot(1,2,2)
+    imshow(conv_out3_linear(:,:,i),[]);
+    title('After Linear Quant');
+
+    saveas(gcf,['output/3_',num2str(i),'.bmp']);
+    pause(1)
+end
 

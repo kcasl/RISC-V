@@ -64,3 +64,48 @@ end
 
 
 % Insert your code for other layers
+%% Layer 2
+
+conv2_out = convol2(conv_out_relu, w2, 1, 2);
+
+for j = 1:size(conv2_out,3)
+    % Add bias
+    conv2_out(:,:,j) = conv2_out(:,:,j) + b2(j);
+end
+
+% ReLU
+conv2_out_relu = conv2_out;
+conv2_out_relu(conv2_out_relu < 0) = 0;
+
+for i = 1:size(conv2_out,3)
+    figure(2)
+    subplot(1,2,1)
+    imshow(conv2_out(:,:,i),[]);
+    title(['Layer2 ch = ',num2str(i)]);
+
+    subplot(1,2,2)
+    imshow(conv2_out_relu(:,:,i),[]);
+    title('After ReLU');
+
+    saveas(gcf,['output/2_',num2str(i),'.bmp']);
+    pause(1)
+end
+
+
+%% Layer 3
+
+conv3_out = convol2(conv2_out_relu, w3, 1, 2);
+
+for j = 1:size(conv3_out,3)
+    % Add bias
+    conv3_out(:,:,j) = conv3_out(:,:,j) + b3(j);
+end
+
+for i = 1:size(conv3_out,3)
+    figure(3)
+    imshow(conv3_out(:,:,i),[]);
+    title(['Layer3 ch = ',num2str(i)]);
+
+    saveas(gcf,['output/3_',num2str(i),'.bmp']);
+    pause(1)
+end

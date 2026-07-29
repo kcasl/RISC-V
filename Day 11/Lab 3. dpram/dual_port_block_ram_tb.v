@@ -57,13 +57,17 @@ initial begin
 	enb = 0; 				
 	addrb  = 0;
 	dia   = 0;
+
+	#(2*CLOCK_PERIOD);
 	
 	// set signal for dual_port_block_ram access
-	//for(/* Insert your code */) begin
-	//	#(4*CLOCK_PERIOD) 	enb = 1'b1;
-	//						/* Insert your code */
-	//	#(CLOCK_PERIOD) 	enb = 1'b0;					
-	//end
+	for(i=0; i<16; i=i+1) begin
+		#(4*CLOCK_PERIOD)
+			enb   = 1'b1;
+			addrb = i;
+		#(CLOCK_PERIOD)
+			enb = 1'b0;					
+	end
 
 end
 
@@ -75,9 +79,11 @@ integer j;
 always@(posedge clk) begin
 	if(enb) begin
 		// TODO: set 'weight_store' and 'weight'
-		/* Insert your code */
-		
-		/********************/
+		for(j=0; j<IN_PIXEL_NUM; j=j+1) begin
+			weight_store[j] <= dob[j*IN_PIXEL_W +: IN_PIXEL_W];
+			weight[j] <= {dob[j*IN_PIXEL_W+IN_PIXEL_W-1],
+						  dob[j*IN_PIXEL_W +: IN_PIXEL_W]};
+		end
 	end
 end
 
