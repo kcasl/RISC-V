@@ -146,13 +146,16 @@ wire 					end_frame;
 
 // Convolutional signals
 reg [WI-1:0] in_img [0:FRAME_SIZE-1];	// Input image
-reg [Ti*WI-1:0] win[0:To-1];			// Weight
+reg [Ti*WI-1:0] win[0:To*9-1];			// Weight (To for 1x1, To*9 for 3x3)
 reg [Ti*WI-1:0] din;					// Input block data
 reg vld_i;								// Input valid signal
 wire [ACT_BITS-1:0] acc_o[0:To-1];		// Output block data
 wire vld_o[0:To-1];						// Output valid signal
 reg [PARAM_BITS-1:0] scale[0:To-1];		// Scales (Batch normalization)
 reg [PARAM_BITS-1:0] bias[0:To-1];		// Biases
+// Ping-pong feature-map mirrors for combo read (next-layer input)
+reg [To*ACT_BITS-1:0] fmap_mem0 [0:FRAME_SIZE-1];
+reg [To*ACT_BITS-1:0] fmap_mem1 [0:FRAME_SIZE-1];
 //wire frame_done[0:3];
 
 // Weight/bias/scale buffer's signals
@@ -258,13 +261,13 @@ begin
 					q_base_addr_param	<= sl_HWDATA[31:20];
 				end
 				CNN_ACCEL_LAYER_CONFIG: begin
-					//q_is_first_layer 	<= /*Insert your code*/;
-					//q_is_last_layer	<= /*Insert your code*/;
-					//q_is_conv3x3		<= /*Insert your code*/;
-					//q_act_type		<= /*Insert your code*/;
-					//q_layer_index		<= /*Insert your code*/;
-					//q_bias_shift		<= /*Insert your code*/;
-					//q_act_shift		<= /*Insert your code*/;
+					q_is_first_layer <= sl_HWDATA[0];
+					q_is_last_layer  <= sl_HWDATA[1];
+					q_is_conv3x3     <= sl_HWDATA[2];
+					q_act_type       <= sl_HWDATA[3];
+					q_layer_index    <= sl_HWDATA[7:4];
+					q_bias_shift     <= sl_HWDATA[12:8];
+					q_act_shift      <= sl_HWDATA[15:13];
 				end
 				CNN_ACCEL_INPUT_IMAGE: 		q_input_pixel_data <= sl_HWDATA;				
 				CNN_ACCEL_INPUT_IMAGE_BASE: q_input_image_base_addr <= sl_HWDATA;
@@ -334,11 +337,16 @@ always@(*) begin
 			if(ctrl_vsync_cnt < To) begin
 				weight_buf_en   = 1'b1;
 				weight_buf_we   = 1'b0;
-				weight_buf_addr = ctrl_vsync_cnt[W_CELL-1:0];
+				weight_buf_addr = q_base_addr_weight + ctrl_vsync_cnt[W_CELL-1:0];
 			end
 		end
 		else begin				// Conv3x3
 			// Insert your code
+			if(ctrl_vsync_cnt < To*9) begin
+				weight_buf_en   = 1'b1;
+				weight_buf_we   = 1'b0;
+				weight_buf_addr = q_base_addr_weight + ctrl_vsync_cnt[W_CELL-1:0];
+			end
 		end
 	end
 end
@@ -347,14 +355,13 @@ end
 always@(*) begin
 	param_buf_en   = 1'b0;
 	param_buf_we   = 1'b0;
-	param_buf_addr = {W_CELL{1'b0}};
+	param_buf_addr = {W_CELL_PARAM{1'b0}};
 	if(ctrl_vsync_run) begin
 									
 		if(ctrl_vsync_cnt < To) begin
-			//param_buf_en   = /*Insert your code*/;
-			//param_buf_we   = /*Insert your code*/;
-			//param_buf_addr = /*Insert your code*/;
-	  
+			param_buf_en   = 1'b1;
+			param_buf_we   = 1'b0;
+			param_buf_addr = q_base_addr_param + ctrl_vsync_cnt[W_CELL_PARAM-1:0];
 		end
 	end
 end
@@ -364,21 +371,23 @@ always@(posedge clk, negedge rstn)begin
 		weight_buf_en_d   <= 1'b0;
 		weight_buf_addr_d <= {W_CELL{1'b0}};	
 		param_buf_en_d 	  <= 1'b0;
-		param_buf_addr_d  <= {W_CELL{1'b0}};
+		param_buf_addr_d  <= {W_CELL_PARAM{1'b0}};
 	end
 	else begin		
 		weight_buf_en_d   <= weight_buf_en; 
-		weight_buf_addr_d <= weight_buf_addr;
+		weight_buf_addr_d <= weight_buf_addr - q_base_addr_weight;
 		param_buf_en_d 	  <= param_buf_en;	 
-		param_buf_addr_d  <= param_buf_addr;
+		param_buf_addr_d  <= param_buf_addr - q_base_addr_param;
 	end
 end
 
 
 always@(posedge clk, negedge rstn)begin
     if(~rstn) begin
-		for(ch_idx = 0; ch_idx <To; ch_idx=ch_idx+1) begin
+		for(ch_idx = 0; ch_idx < To*9; ch_idx=ch_idx+1) begin
 			win[ch_idx]  <= {(Ti*WI){1'b0}};
+		end
+		for(ch_idx = 0; ch_idx < To; ch_idx=ch_idx+1) begin
 			bias[ch_idx] <= {PARAM_BITS{1'b0}};
 			scale[ch_idx] <= {PARAM_BITS{1'b0}};
 		end
@@ -389,7 +398,10 @@ always@(posedge clk, negedge rstn)begin
 			win[weight_buf_addr_d] <= weight_buf_dout;
 		// Scale/bias
 		/*Insert your code*/
-		
+		if(param_buf_en_d) begin
+			bias [param_buf_addr_d] <= param_buf_dout_bias;
+			scale[param_buf_addr_d] <= param_buf_dout_scale;
+		end
 	end
 end
 // Weight buffer
@@ -405,9 +417,9 @@ u_buf_weight(
     .dout(weight_buf_dout	 )  // Data output
 );
 // Bias buffer
-spram #(.INIT_FILE(/*Insert your code*/),
+spram #(.INIT_FILE("input_data/all_conv_biases.hex"),
 		.EN_LOAD_INIT_FILE(EN_LOAD_INIT_FILE),
-		.W_DATA(/*Insert your code*/),.W_WORD(W_CELL_PARAM),.N_WORD(N_CELL_PARAM))
+		.W_DATA(PARAM_BITS),.W_WORD(W_CELL_PARAM),.N_WORD(N_CELL_PARAM))
 u_buf_bias(
     .clk (clk                ), // Clock input
     .en  (param_buf_en       ), // RAM enable (select)
@@ -417,16 +429,16 @@ u_buf_bias(
     .dout(param_buf_dout_bias)  // Data output
 );
 // Scale buffer
-spram #(.INIT_FILE(/*Insert your code*/),
+spram #(.INIT_FILE("input_data/all_conv_scales.hex"),
 		.EN_LOAD_INIT_FILE(EN_LOAD_INIT_FILE),
-		.W_DATA(/*Insert your code*/),.W_WORD(W_CELL_PARAM),.N_WORD(N_CELL_PARAM))
+		.W_DATA(PARAM_BITS),.W_WORD(W_CELL_PARAM),.N_WORD(N_CELL_PARAM))
 u_buf_scale(
     .clk (clk                 ), // Clock input
-    .en  (/*Insert your code*/), // RAM enable (select)
-    .addr(/*Insert your code*/), // Address input(word addressing)
+    .en  (param_buf_en       ), // RAM enable (select)
+    .addr(param_buf_addr     ), // Address input(word addressing)
     .din (/*unused*/          ), // Data input
-    .we  (/*Insert your code*/), // Write enable
-    .dout(/*Insert your code*/)  // Data output
+    .we  (param_buf_we       ), // Write enable
+    .dout(param_buf_dout_scale)  // Data output
 );
 //-------------------------------------------------------------------------------
 // Input feature buffer
@@ -441,10 +453,34 @@ assign is_last_row  = (row == q_height-1)?1'b1:1'b0;
 assign is_first_col = (col == 0			)?1'b1:1'b0;
 assign is_last_col  = (col == q_width-1	)?1'b1:1'b0;
 
+// 3x3 neighbor for intermediate layers (pix_idx: 0..8 -> dy,dx in {-1,0,1})
+reg signed [1:0] nb_dy, nb_dx;
+always @(*) begin
+	case(pix_idx)
+		4'd0: begin nb_dy = -2'sd1; nb_dx = -2'sd1; end
+		4'd1: begin nb_dy = -2'sd1; nb_dx =  2'sd0; end
+		4'd2: begin nb_dy = -2'sd1; nb_dx =  2'sd1; end
+		4'd3: begin nb_dy =  2'sd0; nb_dx = -2'sd1; end
+		4'd4: begin nb_dy =  2'sd0; nb_dx =  2'sd0; end
+		4'd5: begin nb_dy =  2'sd0; nb_dx =  2'sd1; end
+		4'd6: begin nb_dy =  2'sd1; nb_dx = -2'sd1; end
+		4'd7: begin nb_dy =  2'sd1; nb_dx =  2'sd0; end
+		default: begin nb_dy =  2'sd1; nb_dx =  2'sd1; end
+	endcase
+end
+wire signed [W_SIZE:0] nb_row = $signed({1'b0, row}) + nb_dy;
+wire signed [W_SIZE:0] nb_col = $signed({1'b0, col}) + nb_dx;
+wire nb_valid = (nb_row >= 0) && (nb_row < $signed({1'b0,q_height})) &&
+                (nb_col >= 0) && (nb_col < $signed({1'b0,q_width}));
+wire [FRAME_SIZE_W-1:0] nb_addr = nb_row[W_SIZE-1:0] * q_width + nb_col[W_SIZE-1:0];
+wire [To*ACT_BITS-1:0] fmap_prev = nb_valid ?
+	(out_buff_sel ? fmap_mem0[nb_addr] : fmap_mem1[nb_addr]) :
+	{(To*ACT_BITS){1'b0}};
+
 always@(*) begin	
 	vld_i  = 0;
 	din    = 0;
-	// First layer
+	// First layer: pack 3x3 image window into input channels
 	if(q_is_first_layer) begin
 		vld_i = ctrl_data_run;
 		din[0*WI+:WI] = (is_first_row | is_first_col)? 8'd0: in_img[data_count - q_width - 1];
@@ -458,7 +494,14 @@ always@(*) begin
 		din[8*WI+:WI] = (is_last_row  | is_last_col )? 8'd0: in_img[data_count + q_width + 1];			
 	end
 	else begin
-		vld_i = ctrl_data_run;	//Dummy
+		// Intermediate/last layers: previous fmap at 3x3 (or center) neighbor
+		vld_i = ctrl_data_run;
+		if(q_is_conv3x3) begin
+			din = nb_valid ? fmap_prev : {(Ti*WI){1'b0}};
+		end
+		else begin
+			din = out_buff_sel ? fmap_mem0[data_count] : fmap_mem1[data_count];
+		end
 	end
 end
 
@@ -478,7 +521,7 @@ generate
 			./*input [4:0] 			 */bias_shift	(q_bias_shift	),
 			./*input 				 */is_conv3x3	(q_is_conv3x3	),			//0: 1x1, 1:3x3
 			./*input 				 */vld_i		(vld_i			),
-			./*input [N*WI-1:0] 	 */win			(win[i]			),
+			./*input [N*WI-1:0] 	 */win			(q_is_conv3x3 ? win[pix_idx*To+i] : win[i]),
 			./*input [N*WI-1:0] 	 */din			(din			),
 			./*output [ACT_BITS-1:0] */acc_o		(acc_o[i]		),
 			./*output 				 */vld_o		(vld_o[i]		)
@@ -533,6 +576,12 @@ always@(posedge clk, negedge rstn) begin
 		end
 		else begin
 			if(vld_o[0]) begin
+				// Mirror writes for combo readout in the next layer
+				if(!out_buff_sel)
+					fmap_mem0[pixel_count] <= all_acc_o;
+				else
+					fmap_mem1[pixel_count] <= all_acc_o;
+
 				if(pixel_count == q_frame_size-1) begin
 					pixel_count <= 0;
 					layer_done <= 1'b1;

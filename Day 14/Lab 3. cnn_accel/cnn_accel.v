@@ -10,7 +10,7 @@ module cnn_accel #(
 	parameter HEIGHT 	= 128,
 	parameter START_UP_DELAY = 200,
 	parameter HSYNC_DELAY = 160,
-	parameter INFILE    = "./img/butterfly_32bit.hex",
+	parameter INFILE    = "./img/butterfly_08bit.hex",
 	parameter OUTFILE00   = "./out/convout_ch01.bmp",
 	parameter OUTFILE01   = "./out/convout_ch02.bmp",
 	parameter OUTFILE02   = "./out/convout_ch03.bmp",

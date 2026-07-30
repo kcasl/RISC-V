@@ -63,6 +63,8 @@ reg [W_SIZE-1:0] 	col;
 reg [W_FRAME_SIZE-1:0] data_count;
 wire end_frame;
 reg [3:0] pix_idx;
+// Advance spatial position every cycle (1x1), or once every 9 cycles (3x3)
+wire pixel_advance = (!q_is_conv3x3) || (pix_idx == 4'd8);
 //-------------------------------------------------
 // FSM
 //-------------------------------------------------
@@ -96,13 +98,13 @@ always @(*) begin
 				nstate = ST_HSYNC;
         end		
         ST_DATA: begin
-			if(end_frame /* Insert your code*/)		//end of frame
+			if(end_frame && pixel_advance)		//end of frame
 				nstate = ST_IDLE;
 			else begin
-				if((col == q_width-1) /* Insert your code*/)    //end of line
-				nstate = ST_HSYNC;
-			else
-				nstate = ST_DATA;
+				if((col == q_width-1) && pixel_advance)    //end of line
+					nstate = ST_HSYNC;
+				else
+					nstate = ST_DATA;
 			end
         end
         default: nstate = ST_IDLE;
@@ -143,7 +145,7 @@ begin
 		col <= 0;
     end
 	else begin
-		if(ctrl_data_run /* Insert your code*/) begin
+		if(ctrl_data_run && pixel_advance) begin
 			if(col == q_width - 1) begin
 				if(end_frame)
 					row <= 0;			
@@ -163,7 +165,7 @@ begin
         data_count <= 0;
     end
     else begin
-        if(ctrl_data_run /* Insert your code*/) begin
+        if(ctrl_data_run && pixel_advance) begin
 			if(!end_frame)
 				data_count <= data_count + 1;
 			else
@@ -180,7 +182,9 @@ always@(posedge clk, negedge rstn) begin
         pix_idx <= 0;
     end
 	else begin
-		if(q_is_conv3x3 && ctrl_data_run) begin
+		if(q_start)
+			pix_idx <= 0;
+		else if(q_is_conv3x3 && ctrl_data_run) begin
 			if(pix_idx == 8)
 				pix_idx <= 0;
 			else

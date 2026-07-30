@@ -75,10 +75,10 @@ end
 always @(*) begin
     case(cstate)
 	ST_IDLE: begin
-                //if(/*Insert your code*/)
-                //    nstate = ST_VSYNC;
-                //else
-                //    nstate = ST_IDLE;
+                if(q_start)
+                    nstate = ST_VSYNC;
+                else
+                    nstate = ST_IDLE;
         end		
         ST_VSYNC: begin
                 if(ctrl_vsync_cnt == q_start_up_delay) 
@@ -87,19 +87,19 @@ always @(*) begin
                     nstate = ST_VSYNC;
         end	
         ST_HSYNC: begin
-                //if(ctrl_hsync_cnt == /*Insert your code*/) 
-                //    nstate = ST_DATA;
-                //else
-                //    nstate = ST_HSYNC;
+                if(ctrl_hsync_cnt == q_hsync_delay)
+                    nstate = ST_DATA;
+                else
+                    nstate = ST_HSYNC;
         end		
         ST_DATA: begin
-                if(end_frame)    //end of frame
+                if(end_frame)
                     nstate = ST_IDLE;
                 else begin
-                    //if(col == /*Insert your code*/)//end of line
-                    //    nstate = ST_HSYNC;
-                    //else
-                    //    nstate = ST_DATA;
+                    if(col == q_width - 1)
+                        nstate = ST_HSYNC;
+                    else
+                        nstate = ST_DATA;
                 end
         end
         default: nstate = ST_IDLE;
@@ -147,10 +147,10 @@ begin
 				else 
 					row <= row + 1;
 			end
-			//if(col == /*Insert your code*/) 
-			//	col <= 0;
-			//else 
-			//	col <= col + 1;
+			if(col == q_width - 1)
+                col <= 0;
+            else
+                col <= col + 1;
 		end
 	end
 end
@@ -168,7 +168,7 @@ begin
 		end
     end
 end
-//assign end_frame = (data_count == /*Insert your code*/)? 1'b1: 1'b0;		
+assign end_frame = (data_count == q_frame_size - 1) ? 1'b1 : 1'b0;	
 
 //-------------------------------------------------
 // Outputs

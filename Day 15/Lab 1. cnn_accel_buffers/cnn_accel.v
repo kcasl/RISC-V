@@ -250,13 +250,13 @@ begin
 					q_base_addr_param	<= sl_HWDATA[31:20];
 				end
 				CNN_ACCEL_LAYER_CONFIG: begin
-					//q_is_first_layer 	<= /*Insert your code*/;
-					//q_is_last_layer	<= /*Insert your code*/;
-					//q_is_conv3x3		<= /*Insert your code*/;
-					//q_act_type		<= /*Insert your code*/;
-					//q_layer_index		<= /*Insert your code*/;
-					//q_bias_shift		<= /*Insert your code*/;
-					//q_act_shift		<= /*Insert your code*/;
+					q_is_first_layer <= sl_HWDATA[0];
+					q_is_last_layer  <= sl_HWDATA[1];
+					q_is_conv3x3     <= sl_HWDATA[2];
+					q_act_type       <= sl_HWDATA[3];
+					q_layer_index    <= sl_HWDATA[7:4];
+					q_bias_shift     <= sl_HWDATA[12:8];
+					q_act_shift      <= sl_HWDATA[15:13];
 				end
 				CNN_ACCEL_INPUT_IMAGE: 		q_input_pixel_data <= sl_HWDATA;				
 				CNN_ACCEL_INPUT_IMAGE_BASE: q_input_image_base_addr <= sl_HWDATA;
@@ -421,15 +421,16 @@ end
 // Scale/bias
 always@(*) begin
 	param_buf_en   = 1'b0;
-	param_buf_we   = 1'b0;
-	param_buf_addr = {W_CELL{1'b0}};
-	if(ctrl_vsync_run) begin
-		if(ctrl_vsync_cnt < To) begin
-			//param_buf_en   = /*Insert your code*/;
-			//param_buf_we   = /*Insert your code*/;
-			//param_buf_addr = /*Insert your code*/;
-		end
-	end
+    param_buf_we   = 1'b0;
+    param_buf_addr = {W_CELL_PARAM{1'b0}};
+
+    if(ctrl_vsync_run) begin
+        if(ctrl_vsync_cnt < To) begin
+            param_buf_en   = 1'b1;
+            param_buf_we   = 1'b0;
+            param_buf_addr = ctrl_vsync_cnt[W_CELL_PARAM-1:0];
+        end
+    end
 end
 // one-cycle delay
 always@(posedge clk, negedge rstn)begin
@@ -461,11 +462,17 @@ always@(posedge clk, negedge rstn)begin
 		if(weight_buf_en_d)
 			win[weight_buf_addr_d] <= weight_buf_dout;
 		// Scale/bias
-		/*Insert your code*/
-	end
+		if(param_buf_en_d) begin
+            bias[param_buf_addr_d]  <= param_buf_dout_bias;
+            scale[param_buf_addr_d] <= param_buf_dout_scale;
+        end
+
+    end
 end
 // Weight buffer
 spram #(.INIT_FILE("input_data/conv_weights_L1.hex"),
+//spram #(.INIT_FILE("input_data/conv_weights_L2.hex"),
+//spram #(.INIT_FILE("input_data/conv_weights_L3.hex"),
 		.EN_LOAD_INIT_FILE(EN_LOAD_INIT_FILE),
 		.W_DATA(Ti*WI),.W_WORD(W_CELL),.N_WORD(N_CELL))
 u_buf_weight(
@@ -477,9 +484,11 @@ u_buf_weight(
     .dout(weight_buf_dout	 )  // Data output
 );
 // Bias buffer
-spram #(.INIT_FILE(/*Insert your code*/),
+spram #(.INIT_FILE("input_data/conv_biases_L1.hex"),
+//spram #(.INIT_FILE("input_data/conv_biases_L2.hex"),
+//spram #(.INIT_FILE("input_data/conv_biases_L3.hex"),
 		.EN_LOAD_INIT_FILE(EN_LOAD_INIT_FILE),
-		.W_DATA(/*Insert your code*/),.W_WORD(W_CELL_PARAM),.N_WORD(N_CELL_PARAM))
+		.W_DATA(PARAM_BITS),.W_WORD(W_CELL_PARAM),.N_WORD(N_CELL_PARAM))
 u_buf_bias(
     .clk (clk                ), // Clock input
     .en  (param_buf_en       ), // RAM enable (select)
@@ -489,16 +498,18 @@ u_buf_bias(
     .dout(param_buf_dout_bias)  // Data output
 );
 // Scale buffer
-spram #(.INIT_FILE(/*Insert your code*/),
+spram #(.INIT_FILE("input_data/conv_scales_L1.hex"),
+//spram #(.INIT_FILE("input_data/conv_scales_L2.hex"),
+//spram #(.INIT_FILE("input_data/conv_scales_L3.hex"),
 		.EN_LOAD_INIT_FILE(EN_LOAD_INIT_FILE),
-		.W_DATA(/*Insert your code*/),.W_WORD(W_CELL_PARAM),.N_WORD(N_CELL_PARAM))
+		.W_DATA(PARAM_BITS),.W_WORD(W_CELL_PARAM),.N_WORD(N_CELL_PARAM))
 u_buf_scale(
     .clk (clk                 ), // Clock input
-    .en  (/*Insert your code*/), // RAM enable (select)
-    .addr(/*Insert your code*/), // Address input(word addressing)
+    .en  (param_buf_en       ), // RAM enable (select)
+    .addr(param_buf_addr     ), // Address input(word addressing)
     .din (/*unused*/          ), // Data input
-    .we  (/*Insert your code*/), // Write enable
-    .dout(/*Insert your code*/)  // Data output
+    .we  (param_buf_we       ), // Write enable
+    .dout(param_buf_dout_scale)  // Data output
 );
 
 //-------------------------------------------------------------------------------
