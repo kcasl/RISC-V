@@ -208,13 +208,13 @@ begin
 					q_base_addr_param	<= sl_HWDATA[31:20];
 				end
 				CNN_ACCEL_LAYER_CONFIG: begin
-					//q_is_first_layer 	<= /*Insert your code*/;
-					//q_is_last_layer	<= /*Insert your code*/;
-					//q_is_conv3x3		<= /*Insert your code*/;
-					//q_act_type		<= /*Insert your code*/;
-					//q_layer_index		<= /*Insert your code*/;
-					//q_bias_shift		<= /*Insert your code*/;
-					//q_act_shift		<= /*Insert your code*/;
+					q_is_first_layer <= sl_HWDATA[0];
+					q_is_last_layer  <= sl_HWDATA[1];
+					q_is_conv3x3     <= sl_HWDATA[2];
+					q_act_type       <= sl_HWDATA[3];
+					q_layer_index    <= sl_HWDATA[7:4];
+					q_bias_shift     <= sl_HWDATA[12:8];
+					q_act_shift      <= sl_HWDATA[15:13];
 				end
 				CNN_ACCEL_INPUT_IMAGE: 		q_input_pixel_data <= sl_HWDATA;				
 				CNN_ACCEL_INPUT_IMAGE_BASE: q_input_image_base_addr <= sl_HWDATA;

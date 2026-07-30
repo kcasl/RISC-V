@@ -38,7 +38,7 @@ module ahb_master(
 
 //PARAMETER//
 //integer	  i;
-//parameter p		=	1;	//propagation delay???
+parameter p		=	1;	//propagation delay???
 
 parameter BUR_SINGLE	=	3'b000;
 parameter BUR_INCR 		=	3'b001;
@@ -83,9 +83,9 @@ task task_AHBwrite;
 
 	begin
 		// Address phase			
-		@(posedge HCLK);	//#p;
+		@(posedge HCLK);	#p;
 		while(!w_HREADY)	@(posedge HCLK);
-		@(posedge HCLK);	//#p;
+		@(posedge HCLK);	#p;
 
 		o_HADDR		= i_addr;
 		o_HTRANS	= TRANS_NONSEQ;
@@ -95,7 +95,7 @@ task task_AHBwrite;
 
 		// Data phase
 		while(!w_HREADY)	@(posedge HCLK);
-		@(posedge HCLK);	//#p;
+		@(posedge HCLK);	#p;
 
 		o_HADDR		=	32'h00000000;
 		o_HWDATA	=	i_wData;
@@ -104,9 +104,9 @@ task task_AHBwrite;
 		o_HBURST	=	3'b000;
 		o_HWRITE	=	1'b0;
 
-		@(posedge HCLK);	//#p;
+		@(posedge HCLK);	#p;
 		while(!w_HREADY)	@(posedge HCLK)
-		@(posedge HCLK);	//#p;
+		@(posedge HCLK);	#p;
 	
 		o_HWDATA	=	32'h00000000;
 	end
@@ -120,9 +120,9 @@ task task_AHBread;
 	output	[31:0]	o_rData;
 
 	begin
-		@(posedge HCLK);	//#p;
+		@(posedge HCLK);	#p;
 		while(!w_HREADY)	@(posedge HCLK);
-		@(posedge HCLK);	//#p;
+		@(posedge HCLK);	#p;
 											  
 		o_HADDR		=	i_addr;
 		o_HTRANS	=	TRANS_NONSEQ;
@@ -138,7 +138,7 @@ task task_AHBread;
 		o_HSIZE		=	3'b000;
 		o_HBURST	=	3'b000;
 											  
-		@(posedge HCLK);	//#p;
+		@(posedge HCLK);	#p;
 		while(!w_HREADY)	@(posedge HCLK);
 		o_rData		=	w_HRDATA;
 	end
@@ -146,7 +146,7 @@ endtask
 	
 task task_AHBwait;
 	begin
-		@(posedge HCLK);	//#p;
+		@(posedge HCLK);	#p;
 		while(!w_HREADY)		@(posedge HCLK);
 	end
 endtask
