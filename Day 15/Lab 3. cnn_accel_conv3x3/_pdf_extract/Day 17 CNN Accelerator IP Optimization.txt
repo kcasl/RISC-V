@@ -1,0 +1,121 @@
+--- page 1/56 ---
+인공지능하드웨어설계프로젝트
+(AI Hardware Design Project)
+차세대반도체혁신융합대학 2026년여름학기
+담당교수: 이재학
+Day 17: CNN Accelerator IP Optimization
+July 22, 2026
+--- page 2/56 ---
+2
+TOST
+Contents
+ Sub-pixel Layer
+ Optimization
+• Execution Time reduction
+• Buffer reduction
+ How to debug
+--- page 3/56 ---
+3
+
+--- page 4/56 ---
+4
+TOST
+CNN-based Super-Resolution
+• Generate a low-resolution image from a high-resolution image 𝑥
+• Sub-pixel layer: CNN generates four residual images 𝑟1, 𝑟2, 𝑟3, 𝑟4
+• Compute four reconstructed images  𝑟𝑒𝑐1, 𝑟𝑒𝑐2, 𝑟𝑒𝑐3, 𝑟𝑒𝑐4, where 𝑟𝑒𝑐𝑖 = 𝑥 + 𝑟𝑖, 𝑓𝑜𝑟 𝑖 = 1, 2, 3, 4.
+• Flatten 𝑟𝑒𝑐1, 𝑟𝑒𝑐2, 𝑟𝑒𝑐3, 𝑟𝑒𝑐4 to obtain the high-resolution image
+Ground-truth Low-Resolution Four residuals Four recon. images High-Resolution
+--- page 5/56 ---
+5
+TOST
+Compute four reconstructed images 
+ Inputs: A low-resolution image 𝑥 ∈ 𝑍𝐻×𝑊, and four residual images 𝑟1, 𝑟2, 𝑟3, 𝑟4 ∈ 𝑍𝐻×𝑊
+ Output: four reconstructed images  𝑟𝑒𝑐1, 𝑟𝑒𝑐2, 𝑟𝑒𝑐3, 𝑟𝑒𝑐4 ∈ 𝑍𝐻×𝑊
+ Pseudocode: 
+For (𝑖 = 0; 𝑖 < 𝐻 ∗ 𝑊; 𝑖 = 𝑖 + 1)
+𝑝𝑥 = {1’𝑏0, 𝑥[𝑖]} // Assume x[i] has eight bits. 
+𝑝𝑟𝑘 = 𝑟𝑘 𝑖 , 𝑓𝑜𝑟 𝑘 = 1,2,3,4 // {𝑟3 𝑖 , 𝑟2 𝑖 , 𝑟1 𝑖 , 𝑟0 𝑖 } is a 32-bit output from Layer 3. 
+𝑟𝑒𝑐𝑘 𝑖 = ൞
+0 𝑖𝑓 𝑝𝑥 + 𝑝𝑟𝑘 < 0
+255 𝑖𝑓 𝑝𝑥 + 𝑝𝑟𝑘 > 255
+𝑝𝑥 + 𝑝𝑟𝑘
+// Clipping or clamping 
+End for
+--- page 6/56 ---
+6
+TOST
+ Inputs: four reconstructed images  𝑟𝑒𝑐1, 𝑟𝑒𝑐2, 𝑟𝑒𝑐3, 𝑟𝑒𝑐4 ∈ 𝑍𝐻×𝑊
+ Output: High-resolution image 𝑦 ∈ 𝑍 2∗𝐻 × 2∗𝑊
+ Pseudocode: 
+For (𝑟𝑜𝑤 = 0; 𝑟𝑜𝑤 < 𝐻; 𝑟𝑜𝑤 = 𝑟𝑜𝑤 + 1)
+For 𝑐𝑜𝑙 = 0; 𝑐𝑜𝑙 < 𝑊; 𝑐𝑜𝑙 = 𝑐𝑜𝑙 + 1
+𝑦 2 ∗ 𝑟𝑜𝑤 × 2 ∗ 𝑊 + 2 ∗ 𝑐𝑜𝑙 = 𝑟𝑒𝑐1[𝑟𝑜𝑤 × 𝑊 + 𝑐𝑜𝑙]
+𝑦 2 ∗ 𝑟𝑜𝑤 × 2 ∗ 𝑊 + 2 ∗ 𝑐𝑜𝑙 + 1 = 𝑟𝑒𝑐2[𝑟𝑜𝑤 × 𝑊 + 𝑐𝑜𝑙]
+𝑦 2 ∗ 𝑟𝑜𝑤 + 1 × 2 ∗ 𝑊 + 2 ∗ 𝑐𝑜𝑙 = 𝑟𝑒𝑐3[𝑟𝑜𝑤 × 𝑊 + 𝑐𝑜𝑙]
+𝑦 2 ∗ 𝑟𝑜𝑤 + 1 × 2 ∗ 𝑊 + 2 ∗ 𝑐𝑜𝑙 + 1 = 𝑟𝑒𝑐3 𝑟𝑜𝑤 × 𝑊 + 𝑐𝑜𝑙
+End for
+End for
+Compute the high resolution image
+
+--- page 7/56 ---
+7
+TOST
+BMP image writer (bmp_image_writer_2x.v)
+ Write an BMP file from incoming pixels
+ Ports: 
+• Inputs: din, vld
+• Output: frame_done
+ Incoming pixels are stored in a buffer
+• out_img[0:FRAME_SIZE-1]). 
+• Internal counter (pixel_counter) is updated 
+To be updated. 
+--- page 8/56 ---
+8
+TOST
+BMP image writer (bmp_image_writer_2x.v)
+ When all pixels are stored in a buffer,
+• frame_done == 1
+• write an BMP image file
+Write Header
+Write data
+Open a file 
+--- page 9/56 ---
+9
+TOST
+Lab 1. Sub-pixel Layer
+ Modify the code (cnn_accel.v) to implement a sub-pixel layer
+ Make a new BMP writer by modifying the original BMP writer
+ Do a simulation with time = 4,000 microseconds
+ Show the final high-resolution image. 
+--- page 10/56 ---
+10
+TOST
+Simulation results
+High Resolution
+rec_04rec_03
+rec_02rec_01
+--- page 11/56 ---
+11
+
+--- page 12/56 ---
+12
+TOST
+CNN Accelerator: Processing Elements
+ Processing Element (PE) Array (conv_kern.v, mac_kern.v)
+• Perform convolution/activation/quantization operations.
+• To: The number of convolutional kernels (output feature maps)
+• Ti:  The number of multipliers in a CONV kernel (conv_kern.v)
+ The number of multipliers is : To× Ti
+• 256 (=16×16) multipliers run in parallel  
+On-chip buffers (Weight/Input/Output)
+Input Fetcher
+Norm/Activation
+Weight/Bias/Scale Fetcher
+Processing Elements (PEs)
+Adder Tree
+…
+PE
+BUS
+To=16 
+ Ti=16 

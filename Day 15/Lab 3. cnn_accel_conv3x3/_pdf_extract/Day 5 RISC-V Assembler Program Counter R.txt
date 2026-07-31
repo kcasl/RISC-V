@@ -1,0 +1,130 @@
+--- page 1/78 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 5: RISC-V Assembler, Program Counter, RISCV-Core
+June 30, 2026
+--- page 2/78 ---
+2
+TOST
+Review
+ Instruction Set Architecture
+RISC-V Base Integer ISA: RV32I
+A two-page card for RISC-V
+RISC-V Instruction Formats 
+RV32I opcode map
+RISC-V ISA 장점
+R-type: Register-Register instruction
+I-type: Immediate-Register Instructions
+B-type: Control Instruction
+J-type: Jump and Link instructions
+Load (I-type) instruction
+Store (S-type) instruction
+ Labs
+RISCV_Memory
+RISCV_Decoder
+RISCV_Memory_Decoder
+--- page 3/78 ---
+3
+TOST
+Review: RISC-V Instruction Formats (Encoding – making binary bits)
+ 32-bit instruction: Aligned on a four-byte boundary in memory. 
+ Formats: R, I, S, B, U, J-type
+ See RV32I Base Instruction Set
+31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 0
+R-type funct7 rs2 rs1 funct3 rd opcode
+I-type imm[11:0] rs1 funct3 rd opcode
+S-type imm[11:5] rs2 rs1 funct3 imm[4:0] opcode
+B-type imm[12|10:5] rs2 rs1 funct3 imm[4:1|11] opcode
+U-type imm[31|12] rd opcode
+J-type imm[20|10:1|11|19:12] rd opcode
+
+--- page 4/78 ---
+4
+TOST
+Review: Memory + Decoder
+Memory model: Instruction/Program, Data
+Instruction register, decoder
+What is the next instruction?
+iaddar?
+Address Data
+0 mem_r0
+1 mem_r1
+…
+2047 mem_r2047
+dwr
+rst clk
+daddr 32
+dwdata 32 iaddr
+dsize 2
+drdata 32
+ird
+32
+RISC-V
+Decoder
+irdata/
+if_opcode
+32
+imm32
+rd5
+ra5
+rb5
+alu_op3
+branch3
+mem_size2
+RISC-V memory
+Instruction/
+Program
+Data
+
+--- page 5/78 ---
+5
+TOST
+Contents
+ RISC-V Assembler
+Program Conversion Process
+RISC-V Calling Convention
+Assembler mnemonics for RISC-V integer and floating-point registers
+Standard RV32I code for function entry and exit
+RISC-V pseudo instructions 
+RISC-V assembly language 
+Common RISC-V assembler directives
+RV32I allocation of memory to program and data
+ Labs
+Program Counter, Program Counter (extended)
+RISCV_Core
+--- page 6/78 ---
+6
+
+--- page 7/78 ---
+7
+TOST
+Program Conversion Process
+lw x12, 0(x9) 
+add x10 ,x10, x12 
+Linux (Unix) Windows
+C foo.c foo.c
+Assembly foo.s foo.asm
+Object foo.o foo.obj
+Library lib.o .lib
+Execute a.out a.exe
+링크: 함수, 전역 변수 (주소 연결)
+메모리에 올리기
+Tools: Compiler, Assembler, Linker, etc
+--- page 8/78 ---
+8
+TOST
+RISC-V Calling Convention
+ Six general stages in calling a function [Patterson and Hennessy 2017]
+1. Place the arguments where the function can access them
+2. Jump to the function
+3. Acquire local storage resources the function needs, saving registers as required
+4. Perform the desired task of the function
+5. Place the function result value where the calling program can access it, restore any registers, 
+and release any local storage resources.
+6. Since a function can be called from several points in a program, return control to the point of origin.
+ Obtain good performance
+• Try to keep variables in registers rather than memory
+• Avoid going to memory frequently to save and restore these registers.
+ RISC-V fortunately has enough registers to offer the best of both worlds

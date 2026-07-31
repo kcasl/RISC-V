@@ -1,0 +1,129 @@
+--- p11 ---
+11
+ 11
+미사일 (Missile)
+ 미사일
+• 목표물을 타격하기 위해 추진력과 유도체계를 갖춘 무기.
+• 로켓 엔진이나 제트 추진을 사용해 비행하며, 비행 중 스스로 항로를 조정
+• 정찰·타격·방어 등 다양한 목적에 따라 순항, 탄도, 활공 등 여러 형태로 운용
+ IMU (Inertial Measurement Unit, 관성 측정 장치)
+• 가속도와 회전속도 데이터를 시간 누적하여 물체의 위치와 자세를 추정함 (칼만 필터 이용 정확도 향상)
+• 가속도계 (Accelerometer): 3축(x, y, z)의 직선 가속도를 측정하여 기체의 이동 거리 추정에 사용
+• 자이로스코프 (Gyroscope): 3축 회전 속도(각속도)를 측정하여 방향 변화(자세 변화)를 파악
+• 자기 센서 (Magnetometer): 지자기장을 측정하여 방위(Heading) 보정
+미사일(missile)'은
+라틴어 'mittere(보내다, 
+움직이다)'에서 유래
+
+--- p14 ---
+14
+ 14
+활공 미사일 (Glide Missile)
+ 활공 미사일·극초음속 활공체 (HGV, Hypersonic Glide Vehicle) : 가장 고성능 IMU가 필요 + 공력 제어 필수
+• 로켓에 의해 고고도까지 상승한 뒤, 대기권 상층을 마하 5 이상(극초음속)으로 활공하며 비행하는 무기체계
+• 직선으로만 날아가는 탄도미사일과 달리 기동(zig-zag, 변칙 활공)이 가능해 요격이 매우 어려움
+• 고성능 IMU, 항법 알고리즘, 방열·재진입 기술이 필수
+• 플라즈마 형성으로 GPS 신호 상실 가능 → IMU 단독 항법 중요
+• 목표에 접근하기 위해 활공 중 지속적으로 자세 수정
+공력제어(Aerodynamic Control) : 
+비행체(미사일, 항공기, HGV 등)가 공기와의
+상호작용을 이용해 자신의 자세와 비행
+경로를 제어하는 기술. 공기 흐름을 어떻게
+조작하느냐에 따라 비행 궤도와 방향을
+바꾸는 것.
+--- p16 ---
+16
+ 16
+대한민국 국군 미사일 (Missiles)
+Cruise Missiles Ballistic Missiles Hypersonic Glide Vehicles
+• 현무-III 계열: 장거리 순항 미사일
+입니다. 육상 발사형 외에도 함정
+및 잠수함 발사형 등 다양한 플랫폼
+에서 운용. 현무-III A (500km), 현
+무-III B (1,000km), 현무-III C 
+(1,500km 이상)
+• 해성 계열: 해군이 운용하는 함대함
+및 함대지 순항 미사일. 해성-I은 대
+함용이며, 해성-II 및 해성-III는 함
+대지 공격용으로 현무-III 기술을 기
+반
+• 한국형 장거리 공대지 미사일 (천
+룡): 공군 KF-21 전투기에 탑재할
+목적으로 개발 중인 공중 발사 순항
+미사일
+• 현무-II 계열: 고체 연료를 사용하는
+단거리 및 중거리 탄도 미사일입니
+다. 현무-IIA (300km), 현무-IIB 
+(500km), 현무-IIC (800km) 등이 실
+전 배치
+• 현무-IV: 탄두 중량을 극대화하여
+지하 깊숙한 벙커를 파괴할 수 있는
+'벙커 버스터＇ 능력 보유
+• 현무-V: 현무 계열 중 가장 강력한 '
+괴물 미사일'로 불리며, 초대형 탄
+두를 탑재
+• 극초음속 활공 비행체(HGV) 기술
+을 개발 중
+• 하이코어(Hycore): 국방과학연구소
+(ADD) 주도하에 개발 중인 초고속
+비행체 기술 시연 모델의 이름이 '
+하이코어'로 공개. 2025년 9월 시험
+발사에서 최고 속도 마하 6에 달성
+• 공중 발사형 극초음속 미사일
+(ALBM: Air-Launched Ballistic 
+Missile) 개발도 추진
+--- p19 ---
+19
+ 19
+전투기 (Fighter Aircraft)
+ 주요임무: 제공권 장악, 요격, 근접항공지원, 정밀 타격, 전자전(Electronic Warfare), 정찰/감시
+ 전투기의 구성 요소
+• 비행체 구조(Airframe): 스텔스 형상, 고강도·경량 복합소재
+• 엔진(Powerplant): 터보팬 엔진, 추력 벡터링 기술 적용 가능
+• 항전장비(Avionics): 레이더(AESA), IRST, 통신, 전자전 장비(EW), 비행 컴퓨터, 임무 컴퓨터(Mission Computer)
+• 조종 시스템: Fly-by-wire (전자식 비행 제어 시스템), 자동 조종, 안정화 기능 제공
+• 무장 시스템: 미사일, 폭탄, 기관포 통합 운용고기동성(High Maneuverability)
+구분 예시 특징
+4세대 F-16, F-15, KF-16 기동성 중심
+4.5세대 F-15EX, 라팔, 유로파이터, KF-21 AESA + 스텔스 일부 적용
+5세대 F-22, F-35 완전 스텔스 + 네트워크 중심전
+6세대 NGAD, FCAS 무인편대, AI 조종, 극초음속 무장
+• NGAD (Next Generation Air Dominance): 미국, 차세대 제공권 확보 전투기 체계
+• FCAS (Future Combat Air System): 유럽(프랑스·독일·스페인)이 공동 개발하는 미래 항공전력 체계
+--- p58 ---
+58
+TOST
+Extreme Testing for Defense Semiconductors
+ Surviving the Physics of Hypersonic Missile Environments
+• The Velocity Leap: Moving from 300 km/h commercial transit to Mach 20+ ICBM speeds. (=24,700 km/h)
+• The Extreme Wave Distortion: Hypersonic velocity causes unprecedented radio frequency degradation.
+• The Thermal Barrier: Atmospheric re-entry creates friction temperatures reaching 3,000°C.
+• The Plasma Blackout: Extreme heat creates plasma shields that completely block communication.
+• The Ultimate Objective: Defense chips require mission-critical reliability far beyond smartphone standards.
+
+--- p59 ---
+59
+TOST
+The Pinnacle of Technology — Interceptor Data Link 
+ Nanosecond Synchronization in Hypersonic Interceptions
+• The Ultimate Challenge: Striking a Mach 20 ICBM bullet with a Mach 5–10 interceptor.
+• The Closing Velocity: Approaching a combined relative speed of nearly Mach 30.
+• The Synchronization Margin: Zero tolerance for latency—requiring precise nanosecond-level alignment.
+• The Link Vulnerability: Any Doppler compensation failure results in a 100% mission failure.
+• The Semiconductor Demand: Chips must process ground-to-missile tactical data links instantly.
+
+--- p63 ---
+63
+TOST
+Strategic Applications in Air Defense Testing
+ Replicating Hypersonic Physics and Saturation Chaos in the Lab
+• The Doppler Signal Emulation: Injecting severe radio frequency distortions into tactical data link chips to 
+verify signal tracking.
+• The Blackout Plasma Replication: Digitally cutting RF signals to evaluate how guidance processors recover 
+from atmospheric re-entry disconnection.
+• The Saturation Attack Modeling: Injecting data streams of hundreds of simultaneous enemy targets to test 
+chip bandwidth limits.
+• The Non-Destructive Failure Analysis: Forcing electronic hardware into boundary-breaking failure states 
+safely within an indoor laboratory grid.
+• The Verification Blind Spot: Mitigating the complete absence of physical field testing through ultra-high-
+fidelity hardware-in-the-loop stress testing.

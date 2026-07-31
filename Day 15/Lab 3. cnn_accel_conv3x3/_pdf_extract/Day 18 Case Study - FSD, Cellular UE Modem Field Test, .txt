@@ -1,0 +1,120 @@
+--- page 1/42 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 18: Case Study – FSD, Cellular UE Modem Field Test, On Device NPU Processor
+July 23, 2026
+--- page 2/42 ---
+2
+TOST
+Contents
+ Full Self Driving, Autonomous Vehicle
+ Field Test in Cellular Terminal Modem Chipset
+--- page 3/42 ---
+3
+
+--- page 4/42 ---
+4
+TOST
+Autonomous Vehicle
+• Deep Learning Based Self-Driving Car
+S Grigorescu, B Trasnea, T Cocias, G Macesanu, “A Survey of Deep Learning Techniques for
+Autonomous Driving,” Journal of field robotics, 2020.
+Self Driving Car: Autonomous decision-making systems that process streams of observations
+such as cameras, radars, LiDARs, ultrasonic sensors, GPS, inertial sensors
+Modular perception-planning-action pipeline
+Perception and Localization
+High-Level Path Planning
+Behavior Arbitration or low-level path planning
+Motion Controller
+End2End learning fashion
+LiDAR (Light Detection And Ranging) - 빛을 통한 검출과 거리 측정
+--- page 5/42 ---
+5
+TOST
+Autonomous Vehicle
+• Deep Learning Based Self-Driving Car
+Modular perception-planning-action pipeline
+Camera based vs.
+LiDAR perception
+Imitation Learning
+Deep Reinforcement Learning (DRL)
+Iterative Learning Control (ILC)
+Model Predictive Control (MPC)
+--- page 6/42 ---
+6
+TOST
+Autonomous Vehicle
+• Deep Learning Based Self-Driving Car
+End2End learning fashion: Mainly based on deep learning methods
+A direct mapping from sensory data to control commands
+ALVINN (Autonomous Land Vehicle in a Neural Network)
+DAVE (Darpa Autonomous VEhicle)
+NVIDIA PilotNet
+--- page 7/42 ---
+7
+TOST
+Tesla Full Self Driving (FSD) Computer
+E. Talpes, et. al, “ Compute Solution for Tesla’s Full Self-Driving Computer,” IEEE Micro, vol. 40, No. 2,
+2020.
+NNA: Neural Network Accelerator
+World 1st SoC for autonomous 
+driving with CPU, ISP, GPU 
+and custom neural network 
+accelerator
+14nm FinFet (Samsung)
+250M gates (6B TRs)
+--- page 8/42 ---
+8
+TOST
+Tesla Full Self Driving (FSD) Computer
+ Computing patterns: A single convolution is a seven-nested for loop.
+ A large amount of computation comes from CONV, i.e., 98.1% for an Inception Network.
+ Perform a very large # of MAC operations as fast as possible
+MOPS: Millions of operations
+--- page 9/42 ---
+9
+TOST
+Tesla Full Self Driving (FSD) Computer
+ Convolution computing patterns
+(a) Many output pixels to work on in parallel
+(b) ~ (d) 
+The same output pixels of the successive 
+output channels are computed by sharing the 
+input activation and successive output pixels
+ Sharing of data and weights for the dot 
+product computation
+--- page 10/42 ---
+10
+TOST
+Tesla Full Self Driving (FSD) Computer
+ Compute scheme
+• The first row of the data grid and the first column of the weight grid are broadcast 
+across all the 96 rows and 96 columns of the MAC array, respectively, over a 
+few cycles in a pipelined manner.
+• The second row of the data grid and the second column of the weight grid are 
+broadcast in a pipelined manner
+• The MAC computation in each cell is executed similarly
+• The accumulator values are ready to be pushed down to the SIMD unit for post-
+processing.
+• The postprocessing is performed in the 96-wide SIMD unit.
+• The overlap of the MAC and SIMD operations increases the overall utilization of 
+the computational bandwidth, obviating dead cycles.
+SIMD(Single Instruction Multiple Data): A type of parallel computing that calculates 
+multiple values ​​simultaneously with a single command.
+--- page 11/42 ---
+11
+TOST
+Tesla Full Self Driving (FSD) Computer
+• Execute DMA and compute instructions 
+concurrently
+• Starts with several DMA-read operations
+• The compute instruction can start executing in 
+parallel with other queued DMA operations
+ Network Programs
+--- page 12/42 ---
+12
+TOST
+Tesla Full Self Driving (FSD) Computer
+ NNA MicroArchitecture

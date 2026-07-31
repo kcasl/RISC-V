@@ -1,0 +1,128 @@
+--- page 1/36 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 12: What is Artificial Intelligence, On device NPU Processors
+July 10, 2026
+--- page 2/36 ---
+2
+TOST
+Contents
+ What is Artificial Intelligence
+ On Device NPU Processors
+--- page 3/36 ---
+3
+
+--- page 4/36 ---
+4
+TOST
+What is Artificial Intelligence?
+ AI (Artificial Intelligence): 1956년 Proposed by John McCarthy of Dartmouth College at Dartmouth Conference
+ 1950년 “생각하는 기계란 무엇일까“ (앨런 튜링) (컴퓨터가 생각하는 기계로 발전할 수 있을까?)
+ 앨런 튜링 (1912 ~ 1954, Alan Turing) 
+• 영국의 수학자, 논리학자
+• 계산 가능한 것이란 무엇인가: 튜링 머신
+• 암호 해독: 2차 세계대전 중 독일의 에니그마(Enigma) 암호를 해독
+(The Imitation Game)
+• 기계는 생각할 수 있는가: 튜링 테스트
+• 맨체스터 대학교에서 Manchester Mark 1 개발
+- 이론·소프트웨어·아키텍처 전반으로 깊이 참여
+
+--- page 5/36 ---
+5
+TOST
+Turing Machine: 현대 컴퓨터의 이론적 토대
+ 개념: 1936년 튜링이 제시한 가상의 장치로, 모든 종류의 계산을 수행할 수 있는 가장 기본적인 형태의 기계
+ 구성 요소
+• 무한 테이프: 데이터를 기록하고 읽을 수 있는 무한한 길이의 메모리.
+• 헤드(Head): 테이프 위에서 좌우로 움직이며 데이터를 읽고, 쓰고, 지울 수 있는 장치.
+• 상태 레지스터: 기계의 현재 상태를 저장하는 장치.
+• 상태 전이 테이블: 현재 상태와 읽어 들인 데이터를 바탕으로 기계가 어떤 행동(쓰기, 이동, 상태 변경)을 할지
+결정하는 규칙들의 집합.
+ 의의
+• 튜링 머신은 단순한 규칙만으로도 복잡한 계산 문제를 해결할 수 있음을 증명
+• 계산 가능성(computability) 이론의 토대를 마련
+• 실제 컴퓨터가 만들어지는 데 결정적인 역할
+Turing Machine 
+by Mike Davey
+--- page 6/36 ---
+6
+TOST
+Turing Test: 기계 지능의 판별 기준
+ 배경: 튜링은 "기계가 생각할 수 있는가?"라는 추상적인 질문을, 더 구체적이고 실험 가능한 문제로 바꾸고자 함.
+ 실행 방법
+• 참가자: 평가자(사람), 인간 참가자, 기계 참가자로 구성.
+• 대화: 평가자는 인간과 기계가 각각 다른 방에 있는 것을 모르는 상태에서 텍스트 기반으로 대화.
+• 판별: 평가자가 대화를 통해 누가 기계인지 구별하지 못한다면, 그 기계는 테스트를 통과한 것으로 간주.
+ 의의
+• 튜링 테스트(Imitation Game)는 단순히 계산만 하는 기계를 넘어, 인간과 구분할 수 없을 정도로 지능적인
+행동을 보이는 기계의 가능성을 제시
+• 이는 인공지능 연구의 중요한 철학적, 실험적 출발점
+• 거짓말 해도 됨
+• 기계와 사람과의 경쟁 (튜링테스트 아이디어)
+• 사람과 비교평가
+• 언어로만 평가
+ 엄밀히 말하면 아직까지 튜링테스트를 통과한 기계는 없다.
+--- page 7/36 ---
+7
+TOST
+ENIAC vs. Manchester Mark 1
+구분 ENIAC Manchester Mark 1
+완성/운용 • 1945–46 (미국) • 1949 (영국)
+목적 • 특수 목적 대규모 계산 • 범용 컴퓨터
+프로그램 방식 • 배선·스위치 재결선 • 메모리에 저장된 프로그램
+저장 프로그램 • ❌ (초기엔 없음) • ⭕ (stored-program)
+메모리 • 없음(후에 제한적 개조) • 윌리엄스관(CRT)
+명령어 처리 • 순차 하드웨어 설정 • 분기·루프·조건 점프
+크기/소비전력 • 방 하나, 고전력 • 상대적으로 소형
+역사적 의미 • 전자식 계산의 시작 • 현대 컴퓨터 구조의 출발
+This is only a foretaste of what is to come, and only the shadow of what is going to be.
+지금 우리가 보고 있는 것은 장차 올 것의 예고편에 지나지 않으며, 다가올 미래의 희미한 그림자일 뿐이다.
+--- page 8/36 ---
+8
+TOST
+Boolean Algebra
+ George Boole (1815 ~ 1864) 영국의 수학자, 논리학자
+• 인간의 생각을 공식화하고 싶다
+• Mathematical Analysis of Logic : 논리학을 수학화하기 시작 (1849년)
+• An Investigation of the Laws of Thought: Boolean Algebra 정립 (1854년)
+ Claude E. Shannon (1916 ~ 2001) 미국의 수학자, 컴퓨터 과학자
+MIT 석사학위논문: A Symbolic Analysis of Relay and Switching Circuits (1938)
+Boolean Algebra를 전기회로로 구현하는 방법 제시
+정보이론의 아버지, 디지털 회로 이론 창시자
+ Logic gate로 Boolean Operators 구현  Digital System Design
+
+--- page 9/36 ---
+9
+TOST
+Computer, Logic
+ Computer 단어 번역
+ 논리학 (Logic)
+• 올바른 사고, 추론, 그리고 논증의 원리와 구조를 연구하는 학문
+• 우리가 무엇을 어떻게 “이치에 맞게” 생각하고 판단하는가
+한국 일본 중국
+컴퓨터 コンピュータ : 음차 电脑 (diànnǎo)
+전자계산기 電子計算機(でんしけいさんき) 计算机 (jìsuànjī)
+시대 중심인물 핵심개념 현대적 영향
+고대 Aristotle 삼단논법 형식논리의 출발
+중세 Thomas Aquinas, William of Ockham 신학적 논증 논리-신학 융합
+근세 Kant, Leibniz 이성의 구조, 사유의 대수 기호논리의 전조
+근대 George Boole, Gottlob Frege Boolean Algebra, 술어논리 수리논리, 컴퓨터 논리
+현대 Gödel, Russell, Turing 불완전성, 계산가능성 AI, 정보논리, 형식언어
+--- page 10/36 ---
+10
+TOST
+George Boole
+ 기존의 수학
+• 산술: 수의 크기, 계산
+• 미적분: 변화율, 연속적 양 →  “얼마인가?”, “어떻게 변하는가?”
+ Boole의 발상의 전환
+• 사람은 계산만 하는 존재가 아니라, 판단하고, 분류하고, 추론한다. 
+• 이 ‘추론의 법칙’도 수학처럼 표현할 수 있지 않은가?
+ 𝑥2 = 𝑥는 단순한 방정식이지만, 이것이 바로 Boolean algebra의 출발점이자 정체성
+• 논리적 판단에서 어떤 개념을 두 번 적용해도 결과는 달라지지 않는다
+• 멱등冪等법칙 (Idempotent law): 지식의 안정성, 판단의 종결성, 사고의 정지점
+• 연속적인 수의 세계를 스스로 배제하고, 두 값만 허용하는 구조
+ Boolean algebra 
+• ‘계산의 수학’이 아니라 ‘판단이 변하지 않는다는 사실’을 공리로 삼은 수학이다.

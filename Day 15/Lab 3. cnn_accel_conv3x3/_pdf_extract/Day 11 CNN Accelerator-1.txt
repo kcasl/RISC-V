@@ -1,0 +1,126 @@
+--- page 1/106 ---
+인공지능하드웨어설계프로젝트
+(AI Hardware Design Project)
+차세대반도체혁신융합대학 2026년여름학기
+담당교수: 이재학
+Day 11: CNN Accelerator
+July 9, 2026
+--- page 2/106 ---
+2
+TOST
+Contents
+ Deep Learning Accelerator
+ Convolutional Neural Network
+ Quantization
+ Block Memory
+ Reference SW
+--- page 3/106 ---
+3
+
+--- page 4/106 ---
+4
+TOST
+Performance issue
+Each single-core PC has only one computation unit, i.e. ALU, multiplier. 
+Example: bright adjustment
+For each pixel in an image for display: increase or decrease its value by a number. 
+Complexity = total pixels in an image, i.e. 1,179,648 (=768×512×3) 
+Why doesn’t a PC have more cores? How many cores?
+
+--- page 5/106 ---
+5
+TOST
+Applications for Hardware Accelerators
+ AI: Any technique that enables computer to mimic human behaviours.
+ Machine learning (ML): AI techniques that have computers learn without being explicitly programmed. 
+ Deep learning (DL): A subset of ML techniques that makes computation of multi-layered/deep neural networks 
+feasible
+AI Searching
+Planning
+Knowledge 
+Representation
+Fuzzy Logic
+Genetic 
+Algorithm
+Natural Language 
+Processing
+Machine 
+Learning
+SVM Bayesian 
+Learning
+Decision Tree 
+LearningKNN
+Learning
+Deep Learning
+--- page 6/106 ---
+6
+TOST
+History of Neural Networks
+ Neural Networks have been developed and studied for many decades
+1940~1950: adjustable but not learnable
+1950~1970: learnable weights and threshold
+1980~1990: solved nonlinear problem, high computation, local optimal
+2000~2010: Hierarchical feature learning
+2010~now: Deep learning
+1940 1950 1960 1970 1980 1990 2000 2010 2022
+?
+1943 1958 1960 1969 1986 2006
+Electronic Brain Perceptron
+ADALINE
+XOR
+Problem
+Multi-layered
+Perceptron
+w/ backpropagation
+Deep Neural 
+Networks
+w/ pre-training
+Deep 
+Learning
+ImageNet (2012)
+AlphaGo (2016)
+- Board games
+AlphaFold (2020)
+- Protein Folding
+--- page 7/106 ---
+7
+TOST
+Deep Learning Revolution
+Human ~5%
+Deep learning starts to surpass human-level recognition on specific tasks.
+Human-level recognition: ~5% error
+Deep learning
+2012: AlexNet, 8 layers, 16.4% error.
+2014: VGG, 19 layers, 7.3% error
+2014: GoogleNet, 22 layers, 6.7% error
+2015: ResNet, 152 layers, 3.57% error
+Deep residual learning for 
+image recognition, 2017. 
+--- page 8/106 ---
+8
+TOST
+Deep Learning Revolution
+Traditional Recognition: Hand-crafted features + simple classifiers
+Performance becomes saturated when the amount of data increases. 
+Deep Learning (DL): Trainable/Learnable features and classifiers 
+Performance dramatically increases when the amount of data increases. 
+(a) Traditional 
+(b) Deep Learning (c) Performance vs Data 
+Courtesy to Andrew Ng, Stanford CS229 class
+
+--- page 9/106 ---
+9
+TOST
+Neural Networks
+ Neuron: The basic computational unit of the brain (~86B)
+ Synapses (Weights) connect neurons: Nearly 1014 – 1015 synapses 
+Learnable & control influence strength 
+ Neural networks: 
+Neurons receive input signal from dendrites and produce output signal along axon
+Axons interact with the dendrites of other neurons via synaptic weights
+ Artificial Neural networks try to mimic human brain’s behaviors
+
+--- page 10/106 ---
+10
+TOST
+What is a deep neural network?

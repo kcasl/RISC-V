@@ -1,0 +1,106 @@
+--- page 1/70 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 2: Introduction to RISC-V
+June 24, 2026
+--- page 2/70 ---
+2
+TOST
+Contents
+ Computer Evolution
+ ARM
+ Why RISC-V
+ Labs
+Register File
+Arithmetic Logical Unit (ALU)
+Multiplier
+--- page 3/70 ---
+3
+
+--- page 4/70 ---
+4
+TOST
+The Computer Revolution
+ Progress in computer technology
+Underpinned by Moore’s Law 
+ Makes novel applications feasible
+Computers in automobiles
+Cell phones
+Human genome project
+World Wide Web
+Search Engines
+ Computers are pervasive in our life.
+--- page 5/70 ---
+5
+TOST
+Classes of Computers
+Personal computers
+General purpose, variety of software
+Subject to cost/performance tradeoff
+Server computers
+Network-based
+High capacity, performance, reliability
+Range from small servers to building-sized
+Supercomputers
+High-end scientific and engineering calculations
+Highest capability but represent a small fraction of the overall computer market  (expensive)
+Embedded computers
+Hidden as components of systems
+Stringent power/performance/cost constraint
+--- page 6/70 ---
+6
+TOST
+The Post-PC Era
+ Personal Mobile Device (PMD)
+Battery operated
+Connects to the Internet
+Hundreds of dollars
+Smartphones, tablets, electronic glasses
+ Cloud computing
+Warehouse Scale Computers (WSC)
+Software as a Service (SaaS)
+A portion of software runs on a PMD, 
+and a portion runs in the Cloud
+Amazon and Google
+ Fog computing and edge computing involve pushing intelligence 
+and processing capabilities down closer to where the data 
+originates from pumps, motors, sensors, relays, etc.
+
+--- page 7/70 ---
+7
+TOST
+Exploring the Box (iMAC)
+ Central Processing unit (CPU), Graphical Processing Unit (GPU)
+ Memory: DRAMs, SSD
+ IO, Peripherals: Display, speaker
+
+--- page 8/70 ---
+8
+TOST
+Von Neumann Architecture
+• A processing unit that contains an arithmetic logic 
+unit (ALU) and processor registers
+• A control unit that contains an instruction 
+register and program counter
+• Memory that stores data and instructions
+• External mass storage
+• Input and output mechanisms
+ A design architecture for an electronic digital computer
+with these components:
+Generality 
+but bottleneck
+Von Neumann Architecture
+Harvard Architecture
+Input 
+Device
+Output 
+Device
+Central 
+Processing Unit 
+(CPU)Control Unit
+Arithmetic/
+Logic Unit
+Memory Unit
+Register File

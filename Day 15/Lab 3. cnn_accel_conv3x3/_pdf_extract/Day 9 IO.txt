@@ -1,0 +1,142 @@
+--- page 1/88 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 9: IO
+July 7, 2026
+--- page 2/88 ---
+2
+TOST
+Contents
+ Image Sensor, LCD Drive
+ Bright Adjustment
+ Reversible Color Transform
+ Labs
+Sensor model, Display panel model
+Bright Adjustment
+Reversible Color Transform 
+ Image Super Resolution
+--- page 3/88 ---
+3
+TOST
+Typical System on a Chip (SOC)
+A microcontroller-based system on a chip
+Functional components
+Processor cores
+Memory
+Interfaces (for communications)
+USB, FireWire, Ethernet, USART, SPI, HDMI, I² C, etc
+Digital signal processors (DSPs)
+: Perform signal processing operations in SoCs
+for sensors, actuators, data collection,
+data analysis and multimedia processing
+
+--- page 4/88 ---
+4
+TOST
+System Block Diagram
+System with a bus architecture: 
+Master (RISC-V), Slave Memory: SRAM
+Custom IPs: Multiplier, ALU (single transfer)
+Input: Camera Interface  Assume that an image is stored in memory
+Output: LCD Drive
+CNN accelerator 
+Camera 
+Interface
+RISC-V
+(Dummy)
+SRAM 
+Controller SRAM
+LCD Drive
+CNN
+AcceleratorMultiplier ALU
+Master Slave
+Bus interconnection
+Input/Output
+--- page 5/88 ---
+5
+
+--- page 6/88 ---
+6
+TOST
+Input/Output: Image
+ What is an image?
+: An image is an artifact that depicts visual perception, such as a photograph or a 2D picture 
+that resembles a subject (usually a physical object) and thus provides a depiction of it.  (Wikipedia)
+ In the context of signal processing, an image is a distributed amplitude of color(s) 
+42 69 91 99 106 108
+105 42 56 84 106 113
+72 43 42 68 109 112
+width
+height
+Pixel 
+--- page 7/88 ---
+7
+TOST
+What is an image?
+An image can be represented by using three color channels such as red, green and blue. 
+An RGB pixel: 224 colors for a pixel in {(0, 0, 0), (0, 0, 1), …, (255, 255, 255)}
+Example
+Matlab: A = imread(filename) = A[height][width][channel]
+Python/C++ OpenCV: cv2.imread('banana.jpg', cv2.IMREAD_COLOR)
+42 58 85 98 115 120 124 124
+41 47 54 72 96 106 113 123
+80 52 42 42 59 70 97 114
+225 136 38 35 37 62 89 97
+108 99 44 27 33 53 78 97
+30 33 37 35 33 35 46 90
+37 37 38 33 34 34 46 74
+45 42 42 37 34 34 50 98
+30 43 66 76 89 92 96 97
+23 29 38 56 77 83 86 95
+62 32 25 35 45 53 74 88
+208 118 23 27 25 48 69 72
+90 84 34 25 26 45 63 74
+17 22 29 33 27 27 28 66
+29 33 36 34 32 29 32 53
+39 38 38 35 29 29 37 80
+22 26 42 43 53 53 56 54
+12 13 19 34 49 51 51 55
+46 14 12 23 25 25 42 50
+193 102 13 23 15 28 44 37
+74 68 24 23 19 32 41 41
+6 11 24 30 24 20 10 37
+24 26 32 28 27 25 17 26
+34 32 34 29 25 25 26 61
+Image Red Green Blue
+--- page 8/88 ---
+8
+TOST
+Feature images/maps in a CNN network
+Input and feature maps are also images when doing inference on a CNN network
+3×3×1×16
+3×3×16×16
+16 feature maps
+ 16 feature maps
+3×3×16×4
+4 feature 
+maps
+--- page 9/88 ---
+9
+TOST
+Input: CCD vs CMOS sensors
+An image sensor or imager is a sensor that detects and conveys information used to make an image. 
+Invented in 1969 at AT&T Bell Labs by Willard Boyle and George E. Smith. 
+In 2009, they were awarded the Nobel Prize for Physician
+Two main types of digital image sensors
+Charge-coupled device (CCD). 
+Active-pixel sensor (CMOS sensor). 
+CMOS image sensor 
+A CCD image sensor on 
+a flexible circuit board
+--- page 10/88 ---
+10
+TOST
+CMOS Image Sensor (CIS)
+ An object  Optical Lens  CMOS Image Sensor  Image Signal Processor  Display 
+ It has an active pixel sensor (APS) array that captures an image of an object
+Each pixel sensor unit cell has a photodetector (i.e., photodiode).
+A CMOS sensor typically captures a row at a time
+ Image data is stored in a buffer
+CMOS Image Sensor

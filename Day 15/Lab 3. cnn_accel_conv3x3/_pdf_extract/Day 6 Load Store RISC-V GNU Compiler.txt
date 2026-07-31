@@ -1,0 +1,134 @@
+--- page 1/113 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 6: Load and Store, RISC-V GNU Compiler
+July 1, 2026
+--- page 2/113 ---
+2
+TOST
+Review of Simplified RISC-V
+Five modules
+Program counter
+Memory
+Decoder
+ALU
+Register File
+Address Data
+0 mem_r0
+1 mem_r1
+…
+2047 mem_r2047
+clk
+dwr
+rst
+daddr
+32
+dwdata 32
+iaddr
+dsize
+2
+drdata
+32
+Decoder
+32
+imm
+32
+rd5
+ra5
+rb5
+alu_op3
+branch3
+mem_size2
+Memory
+rst clk
+32jump_addr
+branch_taken
+ird ird
+32
+Address Data
+0 r0
+1 r1
+…
+31 r31
+wr
+rst
+clk
+rd
+5
+d
+32
+ra
+a
+5
+32
+rb
+b
+5
+32
+Register File
+a
+b
+alu_op
+p
+32
+32
+32
+flcnz
+5
+4
+ALU
+--- page 3/113 ---
+3
+TOST
+Dummy vs To Do
+ Dummy code/connections
+Maintain the dataflow among modules, i.e., PC, Decoder, ALU, and RF. 
+Some logic is incomplete. 
+ TODO
+Some logic is missing, so they need to be filled out. 
+ How to work on the baseline code?
+--- page 4/113 ---
+4
+TOST
+RISC-V Core and Memory
+1. Instruction Fetch 2. Decode 3. Execute 4. Memory/Write Back
+--- page 5/113 ---
+5
+TOST
+Instruction Fetch
+ Compile the baseline code successfully. 
+ Do a simulation
+Add signals from Memory and PC. 
+Select signals  Right-click  Group  Define “name”  OK. 
+Simulation time = 1000ns
+
+--- page 6/113 ---
+6
+TOST
+Instruction Fetch
+Do a simulation
+Check initialized values in mem_r
+mem_r[0]= 04000493 0000: 0000_0000_0000_0000 (00 or 0)
+mem_r[1]= 00000533 0004: 0000_0000_0000_0100 (01 or 1)
+mem_r[2]= 000005b3 0008: 0000_0000_0000_1000 (10 or 2)
+
+--- page 7/113 ---
+7
+TOST
+Instruction Fetch
+ Complete Program Counter (riscv_pc.v)
+Reset: if_addr_r ← RESET_SP
+Jump: if_addr_r ← jum_addr_w
+Others: if_addr_r ← if_addr_r + 4
+
+--- page 8/113 ---
+8
+TOST
+Instruction Fetch
+ Complete Program Counter (riscv_pc.v)
+Reset: if_addr_r ← RESET_SP
+Jump: if_addr_r ← jum_addr_w
+Others: if_addr_r ← if_addr_r + 4
+mem_r[0]

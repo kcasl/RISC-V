@@ -1,0 +1,113 @@
+--- page 1/75 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 13: Computing Units of a CNN Accelerator - MAC, MAC Kernel, CONV Kernel
+July 14, 2025
+--- page 2/75 ---
+2
+TOST
+Contents
+ Review
+ MAC
+ MAC Kernel (Accumulation)
+ Convolutional Kernel (Normalization and Activation)
+--- page 3/75 ---
+3
+
+--- page 4/75 ---
+4
+TOST
+Performance issue in a CPU
+ A PC system consists of Processor (CPU), i.e. RISC-V, Memory, and IO
+• General-purpose: Execute any program
+ Performance: Each single-core PC has only one computation unit, i.e. ALU, multiplier. 
+• Example: bright adjustment
+• For each pixel in an image for display, increase or decrease its value by a number. 
+ Complexity = total pixels in an image, i.e. 1,179,648 (=768×512×3) 
+• How to boost the performance?
+
+--- page 5/75 ---
+5
+TOST
+Accelerated Systems
+ Accelerator: use additional computational units dedicated to some functionality 
+• A H/W module for special applications
+ Integration: An accelerator appears as a device on the bus 
+• Typically controlled by registers (memory-mapped IO)
+ Performance: When we talk about “HW Accelerator”, we talk about Efficiency
+• Not just about “correctness”, but how “GOOD” it is.
+data
+--- page 6/75 ---
+6
+TOST
+What is a deep neural network?
+ Artificial neural networks try to mimic human brain’s behaviors
+ Deep learning starts to surpass human-level recognition on specific tasks.
+ Deep neural networks: 
+• Use multiple layers: Input neurons, weights, output neurons
+• Trainable/Learnable features and classifiers 
+• Performance dramatically increases when the amount of data increases. 
+
+--- page 7/75 ---
+7
+TOST
+Image Super-Resolution
+ Super-resolution (SR): generate a high-resolution image from a low-resolution one. 
+• Estimating the inverse degradation function is an ill-posed problem  Many solutions
+ Methods
+• Interpolation-based methods: Simple, Fast, Low quality.
+• Reconstruction-based methods: Slow, moderate quality
+• (Deep) Learning-based methods: Complex, extremely high quality
+ Can be sped up by using H/W accelerators. 
+
+--- page 8/75 ---
+8
+TOST
+Sim-ESPCN (hw_uniform_architecture.m)
+ A simple CNN for SR has three convolutional layers 
+• Input is a LR image
+• All three layers use 3×3 CONV filters
+3×3×1×16
+3×3×16×16
+16 feature maps
+ 16 feature maps
+3×3×16×4
+4 feature 
+maps
+Three CONV layers: 
+Layer 1: one input image  16 output feature maps
+Layer 2: 16 input feature maps  16 output feature maps. 
+Layer 3: 16 input feature maps  4 output feature maps. 
+--- page 9/75 ---
+9
+TOST
+Sim-ESPCN (hw_uniform_architecture.m)
+ The number of multiplication operations (num_ops) to calculate ONE output pixel
+• Layer 1: 9 (=3×3×1), Layer 2 and 3: 144 (= 3×3×16).
+ Verify those numbers by adding a debugging point in convol2.m
+• Size of kernel(:,:,:,k).
+Layer Filter 
+size
+No. of 
+input channels
+No. of 
+output channels Input Output num_ops
+1 3×3 1 16 128×128×1 128×128×16 9=(3×3×1)
+2 3×3 16 16 128×128×16 128×128×16 144=(3×3×16)
+3 3×3 16 4 128×128×16 128×128×4 144=(3×3×16)
+
+--- page 10/75 ---
+10
+TOST
+Weight Quantization
+ Convert a FP tensor into a fixed-point format
+ Example: 8-bit symmetric representation
+-255/2, -254/2, …, -1/2, 1/2, …,255/2
+Floating point 
+weight
+quantized weight
+ibits = 0, fbits = 8
+stored weights
+8 bits

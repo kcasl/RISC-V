@@ -1,0 +1,242 @@
+--- page 1/95 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 7: AMBA AHB Bus Master Slave Interconnect
+July 2, 2026
+--- page 2/95 ---
+2
+TOST
+Review of RISC-V
+RISC-V instruction set architecture (ISA)
+Implement all components and Logic
+Register Filer, ALU, Decoder
+Memory: Instruction + Data
+Program counter
+Branch, link, load, store instructions
+Address Data
+0 mem_r0
+1 mem_r1
+…
+2047 mem_r2047
+dwr
+rst clk
+daddr
+32
+dwdata
+32
+iaddr
+dsize
+2
+drdata
+32
+RISC-V
+Decoder
+32
+imm
+32
+rd5
+ra5
+rb5
+alu_op3
+branch3
+mem_size2
+RISC-V memory
+rst clk
+32
+jump_addr
+branch_taken
+ird ird
+32
+Address Data
+0 r0
+1 r1
+…
+31 r31
+wr
+rst
+clk
+rd
+5
+d
+32
+ra
+a
+5
+32
+rb
+b
+5
+32
+Register File
+a
+b
+alu_op
+p
+32
+32
+32
+flcnz
+5
+4
+ALU
+--- page 3/95 ---
+3
+TOST
+RISC-V Core and Memory
+Test bench includes
+A RISC-V core
+A memory with initialized instructions and data. 
+dwr
+rst clk
+daddr
+32dwdata
+32
+iaddr
+dsize 2
+drdata 32
+ird
+32
+RISC-V
+Core
+irdata 32
+RISC-V memory
+riscv_core_tb
+drd
+Instructiondata
+rst clk
+--- page 4/95 ---
+4
+TOST
+Verification
+ Compiler and assembler: Generate machine code (mem.hex)
+ Do simulation
+C code
+int A[64];
+int sum = 0;
+for (int i=0; i<64; i+
++)
+sum += A[i];
+Assembly
+addi x9, x0, 64
+add x10, x0, x0
+add x11, x0, x0
+Loop:
+lw x12, 0(x9)
+add x10, x10, x12
+addi x9, x9, 4
+addi x11, x11, 1
+addi x13, x0, 64
+blt x11, x13, Loop
+
+--- page 5/95 ---
+5
+TOST
+Optimization: Instruction Reordering
+ RISC-V core runs different programs
+ Three assemble versions of a C program
+Baseline
+OPT1: reorder instructions 5 and 6. 
+OPT2: reorder instructions 5, 6, and 7. 
+C code Assembly Code
+Baseline Optimized 1 (Opt1) Optimized 2 (Opt2)
+int A[64];
+int sum = 0;
+for (int i=0; i<64; i++)
+sum += A[i];
+addi x9, x0, 64
+add x10, x0, x0
+add x11, x0, x0
+Loop:
+lw x12, 0(x9)
+add x10, x10, x12
+addi x9, x9, 4
+addi x11, x11, 1
+addi x13, x0, 64
+blt x11, x13, Loop
+addi x9, x0, 64
+add x10, x0, x0
+add x11, x0, x0
+Loop:
+lw x12, 0(x9)
+addi x9, x9, 4
+add x10, x10, x12
+addi x11, x11, 1
+addi x13, x0, 64
+blt x11, x13, Loop
+addi x9, x0, 64
+add x10, x0, x0
+add x11, x0, x0
+Loop:
+lw x12, 0(x9)
+addi x9, x9, 4
+addi x11, x11, 1
+add x10, x10, x12
+addi x13, x0, 64
+blt x11, x13, Loop
+--- page 6/95 ---
+6
+TOST
+Optimization: Instruction Reordering
+ Baseline: Check the execution time: 7,815 ns
+ OPT1: Check the execution time: 7,175 ns (Reduce by 640ns for baseline)
+ OPT2: Check the execution time: 6,535 ns (Reduce by 1280ns for baseline)
+--- page 7/95 ---
+7
+TOST
+Contents
+ AMBA AHB Bus
+ ALU_IP, Multiplier IP
+ AHB Decoder
+ Bus Interconnect
+ Labs
+alu_custom_ip
+multi_slave
+ahb_decoder
+ahb_interconnection
+--- page 8/95 ---
+8
+
+--- page 9/95 ---
+9
+TOST
+Why BUS? 
+ CPU and Memory are directly connected without using a bus
+ For a system with CPU, memory, IO, and other IPs,  many connections are required 
+ Require a protocol to connect all components
+data
+dwr
+rst clk
+daddr
+32dwdata
+32
+iaddr
+dsize 2
+drdata 32
+ird
+32
+RISC-V
+Core
+irdata 32
+RISC-V memory
+riscv_core_tb
+drd
+Instructiondata
+rst clk
+--- page 10/95 ---
+10
+TOST
+Why BUS?
+Provide a common way to connect all components in an SoC system
+Pack an IP with a “standard” interface
+Re-use an IP for many applications
+Protect the copyright of an IP
+Mask its detailed implementation
+Example: Arithmetic Logic Unit
+Y = F(A,B)
+We can mask all the detail implementation and only provide the register map
+0x00: A
+0x04: B
+0x08: F
+0x0C: Y

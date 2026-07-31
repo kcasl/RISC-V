@@ -1,0 +1,99 @@
+--- page 1/32 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 8: Image Super Resolution
+July 3, 2025
+--- page 2/32 ---
+2
+TOST
+Contents
+ Image Super Resolution
+ Upsampling
+• Interpolation-based upsampling
+• Learning-based upsampling
+ Network
+ Performance measure
+ SRCNN
+--- page 3/32 ---
+3
+TOST
+Image Super-Resolution
+ Image Super-Resolution recovers a High Resolution (HR) image from a given Low Resolution (LR) image. 
+ An image may have a “lower resolution” due to a smaller spatial resolution (i.e. size) or due to a result of 
+degradation (such as blurring).
+Blur and Downsampling
+SISR algorithms
+Noise
+Single Image Super Resolution
+--- page 4/32 ---
+4
+TOST
+Image Super-Resolution Applications
+ Satellite image processing
+ Medical image processing
+MRI
+ Multimedia industry and video enhancement
+TV, monitor 
+SR for satellite image SR for medical imaging
+TV & Monitor
+--- page 5/32 ---
+5
+TOST
+Image Super-Resolution Applications
+
+--- page 6/32 ---
+6
+TOST
+Image Super-Resolution: Ill-Posed Problem
+
+--- page 7/32 ---
+7
+TOST
+Image Super-Resolution using deep learning
+ Research to solve problems by applying various deep learning models that have shown good performance in the 
+computer vision field.
+
+--- page 8/32 ---
+8
+TOST
+Image Super-Resolution using deep learning
+ Supervised Learning: Predict high-resolution images from low-resolution images
+ Create high resolution images by using Generative Adversarial Network (GAN)
+
+--- page 9/32 ---
+9
+TOST
+Image Super Resolution
+ How to deal with the problem of different sizes of low-resolution and high-resolution images
+• Interpolation, Transpose Convolution, Sub-pixel method
+ How to apply deep learning models
+• All algorithms used in general deep learning models can be used
+ How to evaluate whether the high-resolution image conversion is successful
+• PSNR (Peak signal to noise ratio)
+• SSIM (structural similarity index)
+• Evaluate visual image quality differences and similarity
+• Reflect that the degree of distortion of the structural information of an image has a significant impact on 
+human perception
+--- page 10/32 ---
+10
+TOST
+Common deep learning models in image classification problems
+ Various deep learning models are being studied to solve computer vision problems.
+ In general image classification problems, deep learning models are built using convolutional layers and fully 
+connected layers.
+
+--- page 11/32 ---
+11
+TOST
+Deep learning models in Image Super Resolution
+ Need additional method for Image SR
+• Need a way to match low resolution image size to high resolution image size
+
+--- page 12/32 ---
+12
+TOST
+Image size difference
+ Need additional method for Image SR
+• Need a way to match low resolution image size to high resolution image size

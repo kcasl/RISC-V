@@ -1,0 +1,209 @@
+--- p16 ---
+16
+TOST
+Target Selection
+ How to define a target for optimization?
+• Find a “high-impact” target
+ Why? 
+• Amdahl’s law
+
+--- p17 ---
+17
+TOST
+Amdahl’s Law
+Amdahl’s law:
+𝑆𝑙𝑎𝑡𝑒𝑛𝑐𝑦 𝑁 = 1
+1 − 𝑝 + 𝑝
+𝑁
+• 𝑆𝑙𝑎𝑡𝑒𝑛𝑐𝑦 is the theoretical speedup of the execution of the whole task
+• N is the speed up of the part of the task that benefits from improved system resources. 
+• P is the proportion of execution time that the part benefiting from improved resources original occupied. 
+Speedup estimation: 
+• OPT1: speed up DMA by 4x
+• OPT2: speed up Layer 3 by 4x
+Execution time (us)
+Baseline OPT1 OPT2
+DMA 188 (4.78%) 47 188
+Layer 1 372 (9.47%) 372 372
+Layer 2 1,685 (42.88%) 1,685 1,685
+Layer 3 1,685 (42.88%) 1,685 421
+Total 3,930 3,789 2,666
+Speedup 1.00 1.037 1.474
+--- p18 ---
+18
+TOST
+Amdahl’s Law
+• 시스템성능향상을위한병렬처리의한계를설명하는법칙
+• 전체작업중병렬화가가능한부분의비율과병렬처리에사용된프로세서수에따라성능개선이제한됨
+
+--- p19 ---
+19
+TOST
+Amdahl’s Law
+• Application (응용)
+• 병렬컴퓨팅및멀티코어설계: 시스템의병렬화가능한비율을분석하여, 프로세서수증가시실제성능향상을
+예측하고설계효율성을판단.
+• 고성능컴퓨팅(HPC), 분산시스템설계: 작업분할및병렬프로그래밍시병목구간(순차처리부분)을줄이기
+위한코드최적화전략수립.
+• 성능개선투자의사결정: 병렬화로얻을수있는성능향상이제한적일경우, 병렬화보다는알고리즘최적화나
+하드웨어가속등다른접근이더효과적일수있음을알려줌.
+• Implication (시사점,함의)
+• 병렬처리자원이많아져도, 전체작업중병렬화되지않는순차부분이병목이되어성능향상에상한선이존재.
+• 성능개선의효과는단순히하드웨어(코어수)를늘리는것이아니라, 병렬화가능한부분(P)을늘리는것이더
+중요함.
+• 완벽한병렬화(P=1)가아니라면, 무한한자원을투입해도무한한성능향상은불가능함.
+Justus Liebig (German Scientist)
+Liebig's law of the minimum
+--- p20 ---
+20
+TOST
+Top System
+ A top system consists of RISC-V, memory and CNN accelerator
+• Two AHB masters (N_MASTER = 2): RISC-V and CNN Accelerator
+• Two AHB slaves (N_SLAVE = 2): Memory and CNN Accelerator
+• The input image (img/butterfly_32bit.hex) is stored in Memory
+HTRANS
+HBURST
+HSIZE
+HADDR
+HWDATA
+HSEL
+3232332
+out_HREADY
+out_HRESP
+out_HRDATA
+HREADY
+32
+sl_HTRANS
+sl_HBURST
+sl_HSIZE
+sl_HADDR
+sl_HWDATA
+sl_HSEL
+3232332
+out_sl_HREADY
+out_sl_HRESP
+out_sl_HRDATA
+cnn_accel.v
+sl_HREADY
+32
+AHB Interconnection (ahb_lite_interconnect.v)
+o_HTRANS
+o_HBURST
+o_HSIZE
+o_HADDR
+o_HWDATA
+o_HSEL
+i_HREADY
+i_sl_HRESP
+i_HRDATA
+o_HREADY
+riscv_dummy (ahb_master.v)
+3232332 32
+o_HTRANS
+o_HBURST
+o_HSIZE
+o_HADDR
+o_HWDATA
+o_HSEL
+i_HREADY
+i_sl_HRESP
+i_HRDATA
+o_HREADY
+Memory controller (ahb_bram.v)
+3232332 32
+Memory
+(bram.v)
+top_system.v
+In the baseline, a pixel is stored in a 32-bit word
+ 24 bits are unused 
+ Can we improve it?
+--- p21 ---
+21
+TOST
+Reorganize the input file (Layer 1)
+ The input image (img/butterfly_32bit_reorder.hex) is stored in Memory
+HTRANS
+HBURST
+HSIZE
+HADDR
+HWDATA
+HSEL
+3232332
+out_HREADY
+out_HRESP
+out_HRDATA
+HREADY
+32
+sl_HTRANS
+sl_HBURST
+sl_HSIZE
+sl_HADDR
+sl_HWDATA
+sl_HSEL
+3232332
+out_sl_HREADY
+out_sl_HRESP
+out_sl_HRDATA
+cnn_accel.v
+sl_HREADY
+32
+AHB Interconnection (ahb_lite_interconnect.v)
+o_HTRANS
+o_HBURST
+o_HSIZE
+o_HADDR
+o_HWDATA
+o_HSEL
+i_HREADY
+i_sl_HRESP
+i_HRDATA
+o_HREADY
+riscv_dummy (ahb_master.v)
+3232332 32
+o_HTRANS
+o_HBURST
+o_HSIZE
+o_HADDR
+o_HWDATA
+o_HSEL
+i_HREADY
+i_sl_HRESP
+i_HRDATA
+o_HREADY
+Memory controller (ahb_bram.v)
+3232332 32
+Memory
+(bram.v)
+top_system.v
+16384  4096
+--- p22 ---
+22
+TOST
+Computation utilization: Layer 1 
+ Layer 1: num_ops=9 (=3×3×1) < 16
+• Layer 1: 3×3×1
+• din: 1×1×16
+• din[9] = din[10] = …= din[15] = 0
+conv_kern: Ti=16 
+address Cycle1 Cycle 2
+[0*WI+:WI] 0 0
+[1*WI+:WI] 0 0
+[2*WI+:WI] 0 0
+[3*WI+:WI] 0 42
+[4*WI+:WI] 42 69
+[5*WI+:WI] 69 91
+[6*WI+:WI] 0 105
+[7*WI+:WI] 105 42
+[8*WI+:WI] 42 56
+…. 0 0
+0 0 0 0 0 0 0 0
+0 42 69 91 99 106 108 111
+0 105 42 56 84 106 113 112
+0 72 43 42 68 109 112 104
+dinout(0,0,:)
+No impact 
+on output
+Do simulation Layer 1 (3×3×1)
+din: 1×1×16  din[9] = din[10] = …= din[15] = 0
+It seems that there is no much room for improvement

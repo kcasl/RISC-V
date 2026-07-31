@@ -1,0 +1,103 @@
+--- page 1/94 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 Summer
+담당교수: 이재학
+Day 1 : Digital System Design Overview
+June 23, 2026
+--- page 2/94 ---
+2
+TOST
+인공지능 하드웨어 설계 프로젝트 (AI Hardware Design Project)
+Study and implement standard components used in AI edge computing
+ RISC-V
+Instruction Set Architecture
+ALU 
+Data Path and Control
+I/O Interfacing and Bus
+ Convolutional neural network Accelerator
+Convolution neural networks
+Multiplication and accumulation (MAC)
+Quantization and Activation
+DMA
+Optimization
+ From Scratch, Develop hands-on experience in designing an AI edge computing system
+
+--- page 3/94 ---
+3
+TOST
+인공지능 하드웨어 설계 프로젝트 (AI Hardware Design Project)
+ 담당교수  現) 서울대학교 차세대반도체 혁신융합대학사업단 객원교수
+ 충북테크노파크 반도체IT센터 센터장
+ 연세대학교 전기전자공학부 산학협력교수
+ 과학기술정보통신부(MSIT) 미래통신전파 PM 
+ 미래창조과학부(MSIP) 이동통신 CP
+ 성균관대학교 정보통신대학 산학협력중점교수
+ 삼성전자 System LSI 사업부 마스터: 스마트폰 모뎀칩셋
+ 이오넥스 Co-Founder : WCDMA/EV-DO
+ Amicuss Wireless Co-Founder (San Jose) : WiMAX
+ 쏠리드 CTO: DMB, WiMAX
+ 한국전자통신연구원 위촉연구원 : CDMA
+ 서울대학교 전자공학과 학사, 석사, 박사
+이재학(李在鶴)
+YI, CHAEHAG
+--- page 4/94 ---
+4
+TOST
+ 강의 계획
+Day 강의 내용 실습
+1 (6/23) Digital System Design Overview Vivado Installation, Lab 1 Encoder, Lab 2 Counter, Lab 3 Pulse Generator
+2 (6/24) Introduction to RISC-V Lab 1: Register file, Lab 2: Arithmetic Logic Unit (ALU), Lab 3: Multiplier
+3 (6/25) Instruction Set Architecture Lab 1: Memory model, Lab 2: Decoder, Lab 3: Memory and Decoder
+4 (6/26) Semiconductor Industry Homework #1
+5 (6/30) Program Counter, Load/Store Lab 1: Program Counter, Lab 2: Simplified RISC-V core
+6 (7/01) RISC-V Compiler, GNU Tool Chain Lab 1: Load/Store, Lab 2: RISC-V core integration
+7 (7/02) AMBA Bus Specification Lab 1: alu_custom_ip, Lab 2: multi_slave, Lab 3: ahb_decoder, Lab 4: ahb_intrconnection
+8 (7/03) Image Super Resolution Homework #2
+9 (7/07) IO Devices Lab 1: lcd_drive, Lab 2: Bright Adjustment, Lab 3. RCT
+10 (7/08) System Integration Lab 1: lcd_drive_if, Lab 2: BRAM_controller, Lab 3: Frame_buffer_opt
+11 (7/09) CNN Accelerator Lab 1: convol_sr, Lab 2: quantization, Lab 3: DPRAM, Lab 4: srnpu
+12 (7/10) Artificial Intelligence Homework #3
+13 (7/14) Computing Units of a CNN Accelerator Lab 1. mac, Lab 2: mac_kern, Lab 3: conv_kern, Lab 4. srnpu_sw, Term Project
+14 (7/15) Data path for a CNN Accelerator Lab 1: sliding_window, Lab 2: cnn_ip, Lab 3: cnn_accel_1
+15 (7/16) Buffers for a CNN Accelerator Lab 1: cnn_accel_buffers, Lab 2: cnn_accel_all_layers, Lab 3: cnn_accel_conv3x3, Homework #4
+16 (7/21) CNN Accelerator IP System Integration Lab 1: cnn_accel_2, Lab 3: cnn_accel_dma
+17 (7/22) Optimization Lab 1: cnn_accel_sub_pixel, Lab 2: cnn_accel_opt
+18 (7/23) Case Study – FSD, Cellular UE Modem Term Project
+19 (7/24) Case Study – Defense Semiconductors Term Project
+20 (7/28) Final Exam
+인공지능 하드웨어 설계 프로젝트 (AI Hardware Design Project)
+Subject to change according to the progress
+--- page 5/94 ---
+5
+TOST
+ 평가방법
+성적부여 방식: 상대평가
+등급제: A~F, S/U
+평가항목 과제 기말고사 프로젝트 Total
+비율 60% 20% 20% 100%
+Note
+출석 규정: 수업일수의 1/3을 초과하여 결석하면 성적은 "F" 또는 "U"가 됨 (학칙 85조)
+결석에 대하여 교원에게 별도로 출석인정을 받은 경우 예외로 할 수 있음
+인공지능 하드웨어 설계 프로젝트 (AI Hardware Design Project)
+--- page 6/94 ---
+6
+
+--- page 7/94 ---
+7
+TOST
+Information and Communication Technology
+ ICT (정보통신) 발전의 動因
+• 집적화: 가격을 낮추면서 성능을 높이는 혁신
+• 압 축: 손실을 최소화하고 정보량을 유지하며 전송량을 대폭 축소
+• 재사용: 유한자원의 재사용을 통해 용량을 대폭 확대
+ 1940년대말 미국 Bell Labs의 발명
+• W. Shockley (1910~1989): Bipolar Junction Transistor
+• C. Shannon (1916~2001): Information Theory
+• W. Rae Young (1915~2008)  with D.H. Ring: Cellular Concept
+
+--- page 8/94 ---
+8
+TOST
+Evolution of Digital Systems
+Source: Gayatri Gopal, Digital transformation in healthcare

@@ -1,0 +1,123 @@
+--- p10 ---
+10
+TOST
+Simulation Results (mac_kern_tb.v)
+conv1x1: we can output a pixel at every cycle. During 9 cycle, 9 pixels are outputted.
+ 16, 32, 48, 64, 80, 96, 112, 128, 144 
+Delay between input and output valid signals is 6 cycles
+5 cycle delay caused by mac.v, 1 cycle delay caused by the accumulation step at mac_kern.v
+conv3x3: we can output a pixel at every 9 cycles (It takes 9 cycles to give one output.)  720
+Delay between input and output valid signals is 14 cycles
+5 cycle delay caused by mac.v, 9 cycle delay caused by the accumulation step at mac_kern.v
+
+--- p11 ---
+11
+TOST
+Simulation Results (mac_kern_tb.v)
+ Stored weights = 0  weights = 0*2+1 = 1.
+ Conv1x1: is_conv3x3=0, vld_i=1
+Cycle 1: acc_o = mac_o = σ𝑖=0
+15 1 × 1 = 16
+Cycle 2: acc_o = mac_o = σ𝑖=0
+15 1 × 2 = 32
+…
+Cycle 9: acc_o = mac_o = σ𝑖=0
+15 1 × 9 = 144
+ Conv3x3: is_conv3x3=1, vld_i=1
+Cycle 1: mac_o = σ𝑖=0
+15 1 × 1 = 16, acc_o ← mac_o = 16
+Cycle 2: mac_o = σ𝑖=0
+15 1 × 2 = 32, acc_o ← mac_o + acc_o
+…
+Cycle 9: mac_o = σ𝑖=0
+15 1 × 9 = 144 , acc_o ← mac_o + acc_o
+acc_o = 16 + 32 + … + 144 = 16 × (1 + 2 + … + 9)= 720. 
+--- p12 ---
+12
+TOST
+Convolutional kernel (conv_kern.v)
+ Two modules:
+ mac_kern.v
+Do convolution
+ bnorm_quant_act.v
+Do batch normalization.
+Adding a bias.
+Do activation quantization
+ An accumulated result  of mac_kern is 
+an input of bnorm_quant_act.v
+
+--- p13 ---
+13
+TOST
+Convolutional kernel (conv_kern.v)
+…
+…
+…
+weightweightweightinput
+input
+input
+Channel-wise 
+adder tree
+…
+Filter-wise 
+partial sum
+Normalization
+Activation
+…
+ Convolutional kernel (conv_kern.v)
+conv_kern.v
+mac_kern.v
+bnorm_quant_act.v
+--- p24 ---
+24
+TOST
+Mapping: Reorganize convol2.m
+ Sliding window: extract a tensor of an input map (din) to do convolution
+• To compute out(i, j, k), in this case, a window of pixels is defined by
+• Row: i-1 to i+1
+• Column: j-1 to j+1
+• All input channels: 
+
+--- p25 ---
+25
+TOST
+Sliding window
+ First layer: one channel
+ Zero padding 
+ Sliding window
+0 0 0 0 0 0 0 0
+0 42 69 91 99 106 108 111
+0 105 42 56 84 106 113 112
+0 72 43 42 68 109 112 104
+0 0 0 0 0 0 0 0
+0 42 69 91 99 106 108 111
+0 105 42 56 84 106 113 112
+0 72 43 42 68 109 112 104
+out(0,0,k) out(0,1,k) 
+0 0 0 0 0 0 0 0
+0 42 69 91 99 106 108 111
+0 105 42 56 84 106 113 112
+0 72 43 42 68 109 112 104
+In C or Verilog, loop indexes are started from 0.
+In Matlab, they are started from 1.    
+--- p26 ---
+26
+TOST
+Sliding window
+ First layer: one channel
+ Zero padding 
+ Sliding window
+0 0 0 0 0 0 0 0
+0 42 69 91 99 106 108 111
+0 105 42 56 84 106 113 112
+0 72 43 42 68 109 112 104
+out(0,2,k) 
+0 0 0 0 0 0 0 0
+0 42 69 91 99 106 108 111
+0 105 42 56 84 106 113 112
+0 72 43 42 68 109 112 104
+out(0,3,k) 
+0 0 0 0 0 0 0 0
+0 42 69 91 99 106 108 111
+0 105 42 56 84 106 113 112
+0 72 43 42 68 109 112 104

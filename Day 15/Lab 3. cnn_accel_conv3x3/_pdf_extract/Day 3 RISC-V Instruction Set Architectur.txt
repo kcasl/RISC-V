@@ -1,0 +1,117 @@
+--- page 1/79 ---
+인공지능 하드웨어 설계 프로젝트
+(AI Hardware Design Project)
+차세대반도체 혁신융합대학 2026년 여름학기
+담당교수: 이재학
+Day 3: RISC-V Instruction Set Architecture
+June 25, 2026
+--- page 2/79 ---
+2
+TOST
+Review
+ Introduction to RISC-V
+Computer Evolution
+Von Neumann Architecture
+ARM
+CISC vs. RISC
+RISC-V Ecosystem
+Why RISC-V
+RISC-V Arithmetic Operations
+ Labs
+Register File
+Arithmetic Logic Unit (ALU)
+Multiplier
+--- page 3/79 ---
+3
+TOST
+Review: RF and ALU
+Address Data
+0 r0
+1 r1
+…
+31 r31
+wr
+rstn
+clk
+rd 5
+d 32
+ra
+a
+5
+32
+rb
+b
+5
+32
+register file
+ALU
+a
+b
+opcode
+out
+32
+32
+32
+4
+add out, a, b
+
+--- page 4/79 ---
+4
+TOST
+Contents
+ Instruction Set Architecture
+RISC-V Base Integer ISA: RV32I
+A two-page card for RISC-V
+RISC-V Instruction Formats 
+RV32I opcode map
+RISC-V ISA 장점
+R-type: Register-Register instruction
+I-type: Immediate-Register Instructions
+B-type: Control Instruction
+J-type: Jump and Link instructions
+Load (I-type) instruction
+Store (S-type) instruction
+ Labs
+RISCV_Memory
+RISCV_Decoder
+RISCV_Memory_Decoder
+--- page 5/79 ---
+5
+
+--- page 6/79 ---
+6
+TOST
+RISC-V Base Integer ISA: RV32I
+ Modular ISAs
+A base ISA, called RV32I, which runs a full software stack
+RV32I is frozen and will never change
+For compiler writers, operating system developers, and assembly language programmers - a stable target
+very small and low energy implementations are possible
+RV32I Base Integer Instruction Set. 47 unique instructions
+RV32E Base integer instruction set: Reduced version of RV32I designed for embedded systems.
+RV64I Base Integer Instruction Set: Widens the integer registers and supported user address space to 64 bits (XLEN=64)
+RV128I Base Integer Instruction Set: XLEN=128
+"M" Standard Extension for Integer Multiplication and Division
+"A" Standard Extension for Atomic Instructions: atomically read-modify-write memory to support synchronization between multiple RISC-V harts 
+running in the same memory space
+"F" Standard Extension for Single-Precision Floating-Point
+"D" Standard Extension for Double-Precision Floating-Point
+"Q" Standard Extension for Quad-Precision Floating-Point
+"L" Standard Extension for Decimal Floating-Point
+"C" Standard Extension for Compressed Instructions: Reduces static and dynamic code size by adding short 16-bit instruction encodings 
+for common operations.
+"B" Standard Extension for Bit Manipulation
+"J" Standard Extension for Dynamically Translated Languages
+"T" Standard Extension for Transactional Memory
+"P" Standard Extension for Packed-SIMD Instructions
+"V" Standard Extension for Vector Operations
+"N" Standard Extension for User-Level Interrupts
+--- page 7/79 ---
+7
+TOST
+A two-page card for RISC-V
+
+--- page 8/79 ---
+8
+TOST
+RISC-V Base Integer ISA: RV32I

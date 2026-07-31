@@ -1,0 +1,263 @@
+--- page 1/66 ---
+인공지능하드웨어설계프로젝트
+(AI Hardware Design Project)
+차세대반도체혁신융합대학 2026년여름학기
+담당교수: 이재학
+Day 10: Integration, BRAM, Frame Buffer
+July 8, 2026
+--- page 2/66 ---
+2
+TOST
+Contents
+ SoC Integration
+ Labs
+lcd_drive_if
+bram controller
+frame buffer
+--- page 3/66 ---
+3
+TOST
+Typical System on a Chip (SOC)
+A microcontroller-based system on a chip
+Functional components
+Processor cores
+Memory
+Interfaces (for communications)
+USB, FireWire, Ethernet, USART, SPI, HDMI, I² C, etc
+Digital signal processors (DSPs)
+: Perform signal processing operations in SoCs
+for sensors, actuators, data collection,
+data analysis and multimedia processing
+
+--- page 4/66 ---
+4
+TOST
+System Block Diagram
+System with a bus architecture: 
+Master (RISC-V), Slave Memory: SRAM
+Custom IPs: Multiplier, ALU (single transfer)
+Input: Camera Interface  Assume that an image is stored in memory
+Output: LCD Drive
+CNN accelerator 
+Camera 
+Interface
+RISC-V
+(Dummy)
+SRAM 
+Controller SRAM
+LCD Drive
+CNN
+AcceleratorMultiplier ALU
+Master Slave
+Bus interconnection
+Input/Output
+--- page 5/66 ---
+5
+•
+•
+•
+--- page 6/66 ---
+6
+Lab 1. LCD drive AHB interface
+--- page 7/66 ---
+7
+TOST
+SoC Block Diagram
+ Two separate codes
+A system with one master and two slaves connected 
+by a bus interconnect. 
+A display model and a display panel
+ How to connect both of them?
+sl_HTRANS
+sl_HBURST
+sl_HSIZE
+sl_HADDR
+sl_HWDATA
+sl_HSEL
+3232332
+out_sl_HREADY
+out_sl_HRESP
+out_sl_HRDATA
+riscv_multiplier_if.v
+sl_HREADY
+32
+sl_HTRANS
+sl_HBURST
+sl_HSIZE
+sl_HADDR
+sl_HWDATA
+sl_HSEL
+3232332
+out_sl_HREADY
+out_sl_HRESP
+out_sl_HRDATA
+riscv_alu_if.v
+sl_HREADY
+32
+AHB Interconnection (ahb_lite_interconnect.v)
+o_HTRANS
+o_HBURST
+o_HSIZE
+o_HADDR
+o_HWDATA
+o_HSEL
+i_HREADY
+i_sl_HRESP
+i_HRDATA
+o_HREADY
+riscv_dummy (ahb_master.v)
+3232332 32
+fmc_top_tb.v
+Display panel
+(display_model.v)
+RECON_VALID
+DATA_RECON_R0
+DATA_RECON_G0
+DATA_RECON_B0
+DATA_RECON_R1
+DATA_RECON_G1
+DATA_RECON_B1
+DATA_R0
+DATA_G0
+DATA_B0
+DATA_R1
+DATA_G1
+DATA_B1
+HSYNC
+8
+8
+8
+8
+8
+8
+Display Controller 
+(sensor_model.v)
+
+--- page 8/66 ---
+8
+TOST
+LCD drive’s AHB Interface
+Build the target system that consists of an AHB master and three AHB slaves
+Master: RISC-V dummy
+Slaves: ALU, multiplier, and LCD drive
+Masters and slaves are connected by an AHB Interconnect. 
+sl_HTRANS
+sl_HBURST
+sl_HSIZE
+sl_HADDR
+sl_HWDATA
+sl_HSEL
+3232332
+out_sl_HREADY
+out_sl_HRESP
+out_sl_HRDATA
+riscv_multiplier_if.v
+sl_HREADY
+32
+sl_HTRANS
+sl_HBURST
+sl_HSIZE
+sl_HADDR
+sl_HWDATA
+sl_HSEL
+3232332
+out_sl_HREADY
+out_sl_HRESP
+out_sl_HRDATA
+riscv_alu_if.v
+sl_HREADY
+32
+AHB Interconnection (ahb_lite_interconnect.v)
+o_HTRANS
+o_HBURST
+o_HSIZE
+o_HADDR
+o_HWDATA
+o_HSEL
+i_HREADY
+i_sl_HRESP
+i_HRDATA
+o_HREADY
+riscv_dummy (ahb_master.v)
+3232332 32
+sl_HTRANS
+sl_HBURST
+sl_HSIZE
+sl_HADDR
+sl_HWDATA
+sl_HSEL
+3232332
+out_sl_HREADY
+out_sl_HRESP
+out_sl_HRDATA
+lcd_drive_if.v
+sl_HREADY
+32
+Display Panel
+display_model.v
+RECON_VALID
+DATA_RECON_R0
+DATA_RECON_G0
+DATA_RECON_B0
+DATA_RECON_R1
+DATA_RECON_G1
+DATA_RECON_B1
+8
+8
+8
+8
+8
+8
+top_system.v SOC
+PIN
+--- page 9/66 ---
+9
+TOST
+How to build and test the target system? 
+Procedure
+1. Create a custom IP (lcd_drive_if.v) and add it into the top system
+Create the AHB slave interface of LCD drive (lcd_drive_if.v).
+Add its base address and the register map (map.v). 
+Add the LCD drive IP to the Bus interconnect (top_system.v).
+2. Generate data signals (lcd_drive_if.v)
+Generate vsync, hsync, r0, b0, g0, r1, g1, b1. 
+3. Test the system
+Baseline mode
+Brightness adjustment
+--- page 10/66 ---
+10
+TOST
+Custom IP (lcd_drive_if.v)
+How to build an AHB interface of LCD drive?
+Input/output signals
+AHB slave signals. 
+LCD drive signals
+sl_HTRANS
+sl_HBURST
+sl_HSIZE
+sl_HADDR
+sl_HWDATA
+sl_HSEL
+3232332
+out_sl_HREADY
+out_sl_HRESP
+out_sl_HRDATA
+lcd_drive_if.v
+sl_HREADY
+32
+Display Panel
+display_model.v
+RECON_VALID
+DATA_RECON_R0
+DATA_RECON_G0
+DATA_RECON_B0
+DATA_RECON_R1
+DATA_RECON_G1
+DATA_RECON_B1
+8
+8
+8
+8
+8
+8
+AHB Interconnect
